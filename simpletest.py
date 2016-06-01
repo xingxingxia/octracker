@@ -3,7 +3,7 @@ from xlutils.copy import copy
 
 class Handler(): 
 	def __init__(self):
-		pass
+		self.start_row = 1
 	def call(self, *args):
 		command = ["oc"] + list(args) + ["-h"]
 		outputStr = subprocess.check_output(command)
@@ -15,7 +15,9 @@ class Handler():
 		return commandList
 	def get_commands(self,pageStr,title):
 		''' input: title - str, title name, e.g. "Basic Commands"
-			output: (commandsL,descriptionL)  commandsL - list for commands of the title,  descriptionL - list for descriptions of commands
+			output: (commandsL,descriptionL)  
+				commandsL - list for commands of the title,  
+				descriptionL - list for descriptions of commands
 		'''
 		commandsL = []
 		descriptionL = []
@@ -30,55 +32,51 @@ class Handler():
 			commandsL.append(cmd)
 		return (commandsL, descriptionL)
 
+	def open_sheet(self,sheetName):
+		try:
+			book = xlrd.open_workbook("octracker.xls",formatting_info=True)
+			tablesheet = book.sheet_by_name(sheetName)
+		except:
+			book = xlwt.Workbook()
+			book.add_sheet(sheetName)
+			book.save("octracker.xls")
+			book = xlrd.open_workbook("octracker.xls",formatting_info=True)
+			tablesheet = book.sheet_by_name(sheetName)
+		return book
+	
+
 class oc(Handler):
 	def __init__(self):
 		Handler.__init__(self)
 		pass
 	def call_command_title(self, *args):
 		self.commandTitleStr = self.call(*args)
-		self.commandTitleList = self.get_command_title(self.commandTitleStr)
+		titles = self.get_command_title(self.commandTitleStr)
+		return titles
 
-	def open_xls(self,sheetName):
-		try:
-			self.book = xlrd.open_workbook("octracker.xls",formatting_info=True)
-			self.tablesheet = self.book.sheet_by_name(sheetName)
-		except:
-			self.book = xlwt.Workbook()
-			self.newsheet = self.book.add_sheet(sheetName)
-			self.book.save("octracker.xls")
-			self.book = xlrd.open_workbook("octracker.xls",formatting_info=True)
-			self.tablesheet = self.book.sheet_by_name(sheetName)
-		self.wb = copy(self.book)
-		self.s = self.wb.get_sheet(0)
-	
-		self.start_row = 1
-
-	def write_sheet(self,colValList,colWriteNum):
-		for index in range(colValList.__len__()):
-			self.s.write(self.start_row + index, colWriteNum, colValList[index])
-		self.start_row = self.start_row + index +1
+	def insert_cmds_for_titles(self, sheet, titles,colWriteNum):
+		print "command titles are \n" + str(titles) + '\n================\n'
+		for title in titles:
+			commandList = self.get_commands(pageStr=self.commandTitleStr, title=title)[0]		
+			for index in range(len(commandList)):
+				sheet.write(self.start_row+index, colWriteNum, commandList[index])
+			self.start_row = self.start_row + index +1
 
 
 if __name__ == '__main__':
 	test=oc()
-	test.call_command_title("")  #	whole command page - test.commandTitleStr
-	test.open_xls("all")
+	commandTitleList = test.call_command_title("")  #	whole command page - test.commandTitleStr
 	if len(sys.argv)<2: 
 		colWriteNum=0
 	else:
 		colWriteNum=int(sys.argv[1])-1
 
-	print "command titles are \n" + str(test.commandTitleList) + '\n====================================\n'
-	for title in test.commandTitleList:
-		cmd_dscpt = test.get_commands(pageStr=test.commandTitleStr, title=title)
-		commandList = cmd_dscpt[0]
-		print title + ':'
-		print commandList
-		print '\n'
-		
-		test.write_sheet(commandList, colWriteNum)
+	book = test.open_sheet("all")
+	editBook = copy(book)
+	ocSheet = editBook.get_sheet(0)
+	test.insert_cmds_for_titles(ocSheet, commandTitleList, colWriteNum)
+	editBook.save("octracker.xls")
 
-	test.wb.save("octracker.xls")
 
 
 
