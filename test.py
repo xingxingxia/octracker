@@ -13,6 +13,9 @@ class Handler():
 			commandList.append(outputStr.split(':')[i].split('\n')[-1])
 		return commandList
 	def get_commands(self,pageStr,title):
+		''' input: title - str, title name, e.g. "Basic Commands"
+		    output: (commandsL,descriptionL)  commandsL - list for commands of the title,  descriptionL - list for descriptions of commands
+		'''
 		commandsL = []
 		descriptionL = []
 		cmd_dspt_Str = pageStr.split(title+':')[1].split("\n\n")[0].strip()
@@ -21,10 +24,10 @@ class Handler():
 			wordlist = cmd_dscpt.split()
 			cmd = wordlist[0]
 			wordlist.remove(wordlist[0])
-			description = "".join(wordlist)
+			description = " ".join(wordlist)
 			descriptionL.append(description)
 			commandsL.append(cmd)
-		return commandsL
+		return (commandsL, descriptionL)
 
 class oc(Handler):
 	def __init__(self):
@@ -33,9 +36,8 @@ class oc(Handler):
 	def call_command_title(self, *args):
 		self.commandTitleStr = self.call(*args)
 		self.commandTitleList = self.get_command_title(self.commandTitleStr)
-	def call_commands(self,title):
-		commandStr = self.call(title)
-		print commandStr
+	def get_commands(self,title):
+
 
 
 
