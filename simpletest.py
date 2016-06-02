@@ -10,8 +10,13 @@ class Handler():
 	#	self.ocLists = []
 
 	def call(self, *args):
-		command = ["oc"] + list(args) + ["-h"]
-	#	outputStr = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+		if type(args) == list:
+			print 'hahah list'
+			command = ["oc"] + largs + ["-h"]
+		else:
+			command = ["oc"] + list(args) + ["-h"]
+		print '^^^^^^^^^^^^^^^^^^^^'
+		print command
 
 		if subprocess.Popen(command, stderr=subprocess.PIPE).stderr.read():
 			return subprocess.Popen(command, stderr=subprocess.PIPE).stderr.read()
@@ -62,23 +67,31 @@ class Handler():
 			print flags
 
 		if "vailable Commands" in pageStr:
+			print '~~~~~~~~~~~'
+			print "vailable Commands" + str(ocCmd)
 			subcmdPageStr = pageStr.split("vailable Commands:\n")[1].split('\n\n')[0]
 			subCmdNamesL = self.get_sub_command_name(subcmdPageStr)
-			print '#######'
-			print subCmdNamesL
-			nextLevelFlags = get_next_level_flags(subCmdNames)
+			nextLevelFlags = self.get_next_level_flags(ocCmd, subCmdNamesL)
 
 
 		#	flags.append(nextLevelFlags)
-			print "vailable Commands"
 			print flags
 
 
 		return flags
 
-	def get_next_level_flags(self, subcmd):
-		outputStr = self.call(subcmd)
-		flags = self.get_flags(outputStr, subcmd)
+	def get_next_level_flags(self, ocCmd, subcmdL):   #ocCmd, subcmdL
+		for subcmd in subcmdL:  # subcmdL= namespace, secret, ...
+			print 'oooooooooc'
+			print ocCmd  #  'create route'
+			print 'sssssssssub'
+			print subcmd  # 'edge'
+			print 'cccccccccccccccccall arg'
+			print (ocCmd +' '+ subcmd).split()
+			print type((ocCmd +' '+ subcmd).split())
+			outputStr = self.call((ocCmd +' '+ subcmd).split()) # e.g ocCmd="create", subcmd='namespace'
+			flags = self.get_flags(outputStr, ocCmd+ ' ' + subcmd)  ######need debug
+
 		return flags
 
 
