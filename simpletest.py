@@ -42,24 +42,44 @@ class Handler():
 			commandsL.append(cmd)
 		return (commandsL, descriptionL)
 
-	def get_flags(self, pageStr):
+	def get_sub_command_name(self, subcmdPageStr):
+		subCmd_namesL = []
+		cmdLines = re.split("\n",subcmdPageStr)
+		for line in cmdLines:
+			sub_cmd = line.split()[0]		
+			subCmd_namesL.append(sub_cmd)
+		return subCmd_namesL
+
+	def get_flags(self, pageStr, ocCmd):
 
 		flags = []
-		secondLevelcmd = []
-		if "vailable Commands" in pageStr:
-			flagStr = pageStr.split("vailable Commands:\n")[1].split('\n\n')[0]
-			flagLines = re.split("\n",flagStr)
-			print flagLines
-			for line in flagLines:
-				flags.append(line.split()[0])
-
-		elif "ptions:" in pageStr:
+		if "ptions:" in pageStr:
 			flagStr = pageStr.split("ptions:\n")[1].split('\n\n')[0]
 			flagLines = re.split("\n",flagStr)
 			for line in flagLines:
 				flags.append(line.split(':')[0])
+			print "options flags"
+			print flags
+
+		if "vailable Commands" in pageStr:
+			subcmdPageStr = pageStr.split("vailable Commands:\n")[1].split('\n\n')[0]
+			subCmdNamesL = self.get_sub_command_name(subcmdPageStr)
+			print '#######'
+			print subCmdNamesL
+			nextLevelFlags = get_next_level_flags(subCmdNames)
+
+
+		#	flags.append(nextLevelFlags)
+			print "vailable Commands"
+			print flags
+
+
 		return flags
 
+	def get_next_level_flags(self, subcmd):
+		outputStr = self.call(subcmd)
+		flags = self.get_flags(outputStr, subcmd)
+		return flags
 
 
 	def open_sheet(self,name):
@@ -97,9 +117,9 @@ class oc(Handler):
 		titles = self.get_command_title(self.commandTitleStr)
 		return titles
 
-	def insert_cmds_for_titles(self, sheet, titles, colWriteNum):
-		print "command titles are \n" + str(titles) + '\n======= above is titles =========\n'
-		for title in titles:
+	def insert_cmds_for_titles(self, sheet, valueList, colWriteNum):
+		print "command titles are \n" + str(valueList) + '\n======= above are top level titles =========\n'
+		for title in valueList:
 			commandList = self.get_commands(pageStr=self.commandTitleStr, title=title)[0]		
 			self.insert_rows(sheet, colWriteNum, commandList)
 			self.append_log(commandList,title)
@@ -108,7 +128,7 @@ class oc(Handler):
 
 if __name__ == '__main__':
 	test=oc()
-	commandTitleList = test.call_command_title("")  #	whole command page - test.commandTitleStr
+	writeList = test.call_command_title("")  #	whole command page - test.commandTitleStr
 	if len(sys.argv)<2: 
 		colWriteNum=0
 	else:
@@ -117,35 +137,47 @@ if __name__ == '__main__':
 	test.open_sheet("all")
 	editBook = copy(test.book)
 	sheet1 = editBook.get_sheet(0)
-	test.insert_cmds_for_titles(sheet1, commandTitleList, colWriteNum)
+	test.insert_cmds_for_titles(sheet1, writeList, colWriteNum)
 	editBook.save("octracker.xls")
 	test.f.close()
 
-#	for i in range(len(commandTitleList)): # use number as SHEET name instead of command title, which might change by dev in future
+#	for i in range(len(writeList)): # use number as SHEET name instead of command title, which might change by dev in future
 #		test.open_sheet(str(i))
 #		editBook = copy(test.book)
 #	editBook.save("octracker.xls")
 
 
-	print test.ocLists
-	print '======= above is level 1 cmds =========\n'
-	for oclist in test.ocLists:
-		print oclist
-		for ocCmd in oclist:
-			print ocCmd
-			outputStr = test.call(ocCmd)
-			flags = test.get_flags(outputStr)
-			flagList = []
-			for flag in flags:
-				if flag =="":
-					pass
-				else:
-					flagList.append(flag.strip())
-			print flagList
+#	print test.ocLists
+#	print '======= above is level 1 cmds =========\n'
+#	for oclist in test.ocLists:
+#		print oclist
+#		for ocCmd in oclist:
+#			print ocCmd
+#			outputStr = test.call(ocCmd)
+#			flags = test.get_flags(outputStr, ocCmd)
+#			flagList = []
+#			for flag in flags:
+#				if flag =="":	pass
+#				else:
+#					try: flagList.append(flag.strip())  # level2 commands is a hash which cannot be stripped
+#					except: pass
+#			print flagList
+	
 
 
 
-		
+
+
+
+
+
+	print '############################################'
+	outputStr = test.call("create")
+	flags = test.get_flags(outputStr, "create")
+	# print flags
+
+
+	#test.insert_cmds_for_titles(sheet1, flags, 2)
 
 
 
