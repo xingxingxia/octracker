@@ -1,14 +1,14 @@
 #!/usr/bin/env python
 import subprocess, xlwt, xlrd
-import sys, re
 from xlutils.copy import copy
+import sys, re
+from xlwt import easyxf
 
 class Handler(): 
 	def __init__(self):
 		self.start_row = 1
 		self.bookName = "octracker.xls"
 		self.f=open("log",'w')
-	#	self.ocLists = []
 
 	def call(self, *args):
 		if type(args[0]) == list:
@@ -51,9 +51,7 @@ class Handler():
 		for line in cmdLines:
 			sub_cmd = line.split()[0]		
 			subCmd_namesL.append(sub_cmd)
-	#	print '###########################'
-	#	print subCmd_namesL
-	#	print '###########################'
+
 		return subCmd_namesL
 
 	def get_flags(self, pageStr, ocCmd):
@@ -67,10 +65,8 @@ class Handler():
 			for line in flagLines:
 				flags.append(line.split(':')[0])
 			self.append_log(list=flags, title='oc '+ocCmd)
-#			self.insert_rows(flags)  #
 
 		if "vailable Commands" in pageStr:
-#			print "< %s > "%str(ocCmd)
 			subcmdPageStr = pageStr.split("vailable Commands:\n")[1].split('\n\n')[0]
 			subCmdNamesL = self.get_sub_command_name(subcmdPageStr)
 			nextLevel = self.get_next_level_flags(ocCmd, subCmdNamesL)
@@ -80,9 +76,7 @@ class Handler():
 			pageStr = nextLevel[2]
 			commands.append(subcmdStr)
 			flags.append(subcmdFlagsL)
-#			self.append_log(list=subcmdStr, title="%s's subcmd"%ocCmd)
 
-	#	self.insert_rows(flags)
 		return flags
 
 	def get_next_level_flags(self, ocCmd, subcmdL):   #ocCmd, subcmdL
@@ -91,15 +85,10 @@ class Handler():
 			ocCmdSubCmd = (newCmd).split()
 			newPageStr = self.call(ocCmdSubCmd) # e.g ocCmd="create", subcmd='namespace'
 			flags = self.get_flags(newPageStr, newCmd)  
-#		print '######'
-#		print type(subcmdL)
-#		print subcmdL
-#		self.append_log(list=subcmdL, title="%s's subcmd flags"%ocCmd)       ######need debug
 
 		return (newCmd, flags, newPageStr)
 
-
-	def open_sheet(self,name):
+	def open_book_with_sheet(self,name):
 		try:
 			book = xlrd.open_workbook(self.bookName)
 			tablesheet = book.sheet_by_name(name)
@@ -113,19 +102,28 @@ class Handler():
 			print 'in except'
 		finally:
 			self.book = book
+			self.sheet = tablesheet
 	
-	def insert_rows(self, commandList=[]):
+	def color4bold(self, color):
+		'''for bold color: '''
+		style = xlwt.easyxf('font: bold true;'
+               'borders: left no_line, right no_line, top no_line, bottom no_line;'
+               'font: color %s'%color)
+		return style
+
+	def insert_rows(self, commandList=[], color=''):
 		i = 0
 		for value in commandList:
 			i = commandList.index(value)
-		#	self.sheet.write(self.start_row+index, self.colWriteNum, commandList[index])
-			self.sheet.write(self.start_row+i, self.colWriteNum, value)
+			if color: self.sheet.write(self.start_row+i, self.colWriteNum, value ,style=self.color4bold(color=color)) 
+			else: self.sheet.write(self.start_row+i, self.colWriteNum, value)
 		self.start_row = self.start_row + i +1
 
 		
 	def append_log(self, list=[], title=[]):
 		self.f.write('\n%s\n'%title)
-		self.insert_rows([title] + list)
+		self.insert_rows([title], color='black')
+		self.insert_rows(list)
 		for item in list:
 			self.f.write(str(item) + '\n')
 
@@ -141,34 +139,30 @@ class oc(Handler):
 
 	def insert_cmds_for_titles(self, valueList):
 		print "command titles are \n" + str(valueList) + '\n======= above are top level titles =========\n'
+		self.insert_rows(["======= top level titles ========="], color='aqua')
 		for title in valueList:
 			commandList = self.get_commands(pageStr=self.commandTitleStr, title=title)[0]	
-			self.insert_rows(commandList)
 			self.append_log(commandList,title)
 			self.ocLists.append(commandList)
 		self.f.write('================================\n')
+		self.insert_rows(["================================"], color='aqua')
 
 if __name__ == '__main__':
 	test=oc()
-	writeList = test.call_command_title("")  #	whole command page - test.commandTitleStr
-	if len(sys.argv)<2: 
-		test.colWriteNum=0
-	else:
-		test.colWriteNum=int(sys.argv[1])-1
+	test.open_book_with_sheet("all")
+	test.sheet = test.book.sheet_by_index(0) 
+	test.colWriteNum = test.sheet.ncols # write from col 0, so does not need + 1
 
-	test.open_sheet("all")
+	if len(sys.argv)<2: logTitle = raw_input("Please input a title for this version of result, suggest '3.2.0.x' :")
+	else: logTitle = sys.argv[1]
+	writeList = test.call_command_title("")  #	whole command page - test.commandTitleStr
 	editBook = copy(test.book)
 	test.sheet = editBook.get_sheet(0)
+	test.sheet.write(0, test.colWriteNum, logTitle, test.color4bold(color='green'))
 	test.insert_cmds_for_titles( writeList) # write top level commands
 
-#	for i in range(len(writeList)): # use number as SHEET name instead of command title, which might change by dev in future
-#		test.open_sheet(str(i))
-#		editBook = copy(test.book)
-#	editBook.save("octracker.xls")
 
 
-
-#	print test.ocLists
 	for oclist in test.ocLists:
 		print '\n============================================'
 		print oclist
@@ -177,36 +171,10 @@ if __name__ == '__main__':
 			outputStr = test.call(ocCmd)
 			flags = test.get_flags(outputStr, ocCmd)
 			
-		#	flagList = []
-		#	for flag in flags:
-		#		if flag =="":	pass
-		#		else:
-		#			try: flagList.append(flag.strip())  # level2 commands is a hash which cannot be stripped
-		#			except: pass
-		#	print flagList
-	
-
-
-
-
-
-
-
-## for test `oc create -h`
-#	outputStr = test.call("create")
-#	flags = test.get_flags(outputStr, "create")
-
 
 
 	editBook.save("octracker.xls")
 	test.f.close()
-
-
-
-
-
-
-
 
 
 
