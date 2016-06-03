@@ -10,19 +10,16 @@ class Handler():
 	#	self.ocLists = []
 
 	def call(self, *args):
-		if type(args) == list:
-			print 'hahah list'
-			command = ["oc"] + largs + ["-h"]
+		if type(args[0]) == list:
+			command = ["oc"] + args[0] + ["-h"]
 		else:
 			command = ["oc"] + list(args) + ["-h"]
-		print '^^^^^^^^^^^^^^^^^^^^'
 		print command
 
-		if subprocess.Popen(command, stderr=subprocess.PIPE).stderr.read():
+		if subprocess.Popen(command, stderr=subprocess.PIPE).stderr.read(): # command output is from oc stderr 
 			return subprocess.Popen(command, stderr=subprocess.PIPE).stderr.read()
 		else:
-			print 'oc from stdout---'
-			return subprocess.Popen(command, stdout=subprocess.PIPE).stdout.read()
+			return subprocess.Popen(command, stdout=subprocess.PIPE).stdout.read()  # command output is from oc stdout
 	def get_command_title(self,outputStr):
 		commandList = []
 		for i in range(outputStr.count(':')):
@@ -53,46 +50,47 @@ class Handler():
 		for line in cmdLines:
 			sub_cmd = line.split()[0]		
 			subCmd_namesL.append(sub_cmd)
+	#	print '###########################'
+	#	print subCmd_namesL
+	#	print '###########################'
 		return subCmd_namesL
 
 	def get_flags(self, pageStr, ocCmd):
+		''' start from root oc command, like `create`, and get all subcommands/subcommands flags'''
 
 		flags = []
+		commands = []
 		if "ptions:" in pageStr:
 			flagStr = pageStr.split("ptions:\n")[1].split('\n\n')[0]
 			flagLines = re.split("\n",flagStr)
 			for line in flagLines:
 				flags.append(line.split(':')[0])
-			print "options flags"
-			print flags
+			self.append_log(list=flags, title="%s flags"%ocCmd)
 
 		if "vailable Commands" in pageStr:
-			print '~~~~~~~~~~~'
-			print "vailable Commands" + str(ocCmd)
+			print "vailable Commands " + str(ocCmd)
 			subcmdPageStr = pageStr.split("vailable Commands:\n")[1].split('\n\n')[0]
 			subCmdNamesL = self.get_sub_command_name(subcmdPageStr)
-			nextLevelFlags = self.get_next_level_flags(ocCmd, subCmdNamesL)
+			nextLevel = self.get_next_level_flags(ocCmd, subCmdNamesL)
 
-
-		#	flags.append(nextLevelFlags)
-			print flags
-
+			subcmdStr = nextLevel[0]
+			subcmdFlagsL = nextLevel[1]
+			pageStr = nextLevel[2]
+			commands.append(subcmdStr)
+			flags.append(subcmdFlagsL)
+#			self.append_log(list=subcmdStr, title="%s's subcmd"%ocCmd)
 
 		return flags
 
 	def get_next_level_flags(self, ocCmd, subcmdL):   #ocCmd, subcmdL
 		for subcmd in subcmdL:  # subcmdL= namespace, secret, ...
-			print 'oooooooooc'
-			print ocCmd  #  'create route'
-			print 'sssssssssub'
-			print subcmd  # 'edge'
-			print 'cccccccccccccccccall arg'
-			print (ocCmd +' '+ subcmd).split()
-			print type((ocCmd +' '+ subcmd).split())
-			outputStr = self.call((ocCmd +' '+ subcmd).split()) # e.g ocCmd="create", subcmd='namespace'
-			flags = self.get_flags(outputStr, ocCmd+ ' ' + subcmd)  ######need debug
+			newCmd = ocCmd +' '+ subcmd
+			ocCmdSubCmd = (newCmd).split()
+			newPageStr = self.call(ocCmdSubCmd) # e.g ocCmd="create", subcmd='namespace'
+			flags = self.get_flags(newPageStr, newCmd)  
+		#	self.append_log(list=subcmdFlagsL, title="%s's subcmd flags"%ocCmd)       ######need debug
 
-		return flags
+		return (newCmd, flags, newPageStr)
 
 
 	def open_sheet(self,name):
@@ -117,8 +115,8 @@ class Handler():
 		
 	def append_log(self, list, title):
 		self.f.write('\n--- %s ---\n'%title)
-		for txt in list:
-			self.f.write(txt + '\n')
+		for item in list:
+			self.f.write(str(item) + '\n')
 
 class oc(Handler):
 	def __init__(self):
@@ -152,7 +150,6 @@ if __name__ == '__main__':
 	sheet1 = editBook.get_sheet(0)
 	test.insert_cmds_for_titles(sheet1, writeList, colWriteNum)
 	editBook.save("octracker.xls")
-	test.f.close()
 
 #	for i in range(len(writeList)): # use number as SHEET name instead of command title, which might change by dev in future
 #		test.open_sheet(str(i))
@@ -193,6 +190,7 @@ if __name__ == '__main__':
 	#test.insert_cmds_for_titles(sheet1, flags, 2)
 
 
+	test.f.close()
 
 
 
