@@ -158,7 +158,7 @@ class Handler():
 		if self.diff == False:
 			return "nothing changed!"
 		else:
-			return subprocess.Popen("git diff".split(), stdout=subprocess.PIPE).stdout.read() 
+			return subprocess.Popen("git diff log".split(), stdout=subprocess.PIPE).stdout.read() 
 
 
 
