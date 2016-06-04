@@ -154,11 +154,11 @@ class Handler():
 			newL.append(tablesheet.cell(rowx=i,colx=ncol-1).value) # row/col index starts from 0
 			oldL.append(tablesheet.cell(rowx=i,colx=ncol-2).value
 		'''
-	def diff(self):
+	def check_diff(self):
 		if self.diff == False:
-			pass
+			return "nothing changed!"
 		else:
-			pass
+			return subprocess.Popen("git diff".split(), stdout=subprocess.PIPE).stdout.read() 
 
 
 
@@ -190,7 +190,7 @@ if __name__ == '__main__':
 
 	test.diff = False
 	if "diff" in sys.argv:
-		self.diff = True
+		test.diff = True
 		sys.argv.remove("diff")
 
 	if len(sys.argv)<2: logTitle = raw_input("Please input a title for this version of result, suggest '3.2.0.x' :")
@@ -220,6 +220,6 @@ if __name__ == '__main__':
 
 
 	test.f.close()
-
+	print test.check_diff()
 
 
