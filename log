@@ -1,0 +1,715 @@
+
+Basic Commands
+types
+login
+new-project
+new-app
+status
+project
+explain
+
+Build and Deploy Commands
+deploy
+rollback
+new-build
+start-build
+cancel-build
+import-image
+tag
+
+Application Management Commands
+get
+describe
+edit
+set
+label
+annotate
+expose
+delete
+scale
+autoscale
+secrets
+serviceaccounts
+
+Troubleshooting and Debugging Commands
+logs
+rsh
+rsync
+port-forward
+debug
+exec
+proxy
+attach
+run
+
+Advanced Commands
+adm
+create
+replace
+apply
+patch
+process
+export
+policy
+convert
+
+Settings Commands
+logout
+config
+whoami
+
+Other Commands
+version
+help
+================================
+
+oc login
+  -p, --password=''
+  -u, --username=''
+      --certificate-authority=''
+      --insecure-skip-tls-verify=false
+      --token=''
+
+oc new-project
+      --description=''
+      --display-name=''
+
+oc new-app
+      --allow-missing-images=false
+      --allow-missing-imagestream-tags=false
+      --as-test=false
+      --code=[]
+      --context-dir=''
+      --docker-image=[]
+      --dry-run=false
+  -e, --env=[]
+  -f, --file=[]
+      --grant-install-rights=false
+      --group=[]
+      --image=[]
+  -i, --image-stream=[]
+      --insecure-registry=false
+  -l, --labels=''
+  -L, --list=false
+      --name=''
+      --no-headers=false
+      --no-install=false
+  -o, --output=''
+      --output-template=''
+      --output-version=''
+  -p, --param=[]
+  -S, --search=false
+      --strategy=''
+      --template=[]
+
+oc status
+      --all-namespaces=false
+  -o, --output=''
+  -v, --verbose=false
+
+oc project
+  -q, --short=false
+
+oc explain
+      --recursive=false
+
+oc deploy
+      --cancel=false
+      --enable-triggers=false
+      --latest=false
+      --retry=false
+
+oc rollback
+      --change-scaling-settings=false
+      --change-strategy=false
+      --change-triggers=false
+  -d, --dry-run=false
+  -o, --output=''
+  -t, --template=''
+      --to-version=0
+
+oc new-build
+      --allow-missing-images=false
+      --allow-missing-imagestream-tags=false
+      --binary=false
+      --build-secret=[]
+      --code=[]
+      --context-dir=''
+      --docker-image=[]
+  -D, --dockerfile=''
+      --dry-run=false
+  -e, --env=[]
+      --image=[]
+  -i, --image-stream=[]
+  -l, --labels=''
+      --name=''
+      --no-headers=false
+      --no-output=false
+  -o, --output=''
+      --output-version=''
+  -a, --show-all=true
+      --show-labels=false
+      --sort-by=''
+      --source-image=''
+      --source-image-path=''
+      --strategy=''
+  -t, --template=''
+      --to=''
+      --to-docker=false
+
+oc start-build
+      --build-loglevel=''
+      --commit=''
+  -e, --env=[]
+      --follow=false
+      --from-build=''
+      --from-dir=''
+      --from-file=''
+      --from-repo=''
+      --from-webhook=''
+      --git-post-receive=''
+      --git-repository=''
+      --list-webhooks=''
+      --wait=false
+
+oc cancel-build
+      --dump-logs=false
+      --restart=false
+
+oc import-image
+      --all=false
+      --confirm=false
+      --from=''
+      --insecure=false
+
+oc tag
+      --alias=false
+  -d, --delete=false
+      --insecure=false
+      --scheduled=false
+      --source=''
+
+oc get
+      --all-namespaces=false
+      --export=false
+  -f, --filename=[]
+  -L, --label-columns=[]
+      --no-headers=false
+  -o, --output=''
+      --output-version=''
+  -l, --selector=''
+  -a, --show-all=true
+      --show-labels=false
+      --sort-by=''
+  -t, --template=''
+  -w, --watch=false
+      --watch-only=false
+
+oc describe
+  -f, --filename=[]
+  -l, --selector=''
+
+oc edit
+  -f, --filename=[]
+  -o, --output='yaml'
+      --output-version=''
+      --record=false
+      --save-config=false
+      --windows-line-endings=false
+
+oc label
+      --all=false
+      --dry-run=false
+  -f, --filename=[]
+      --no-headers=false
+  -o, --output=''
+      --output-version=''
+      --overwrite=false
+      --record=false
+      --resource-version=''
+  -l, --selector=''
+  -a, --show-all=true
+      --show-labels=false
+      --sort-by=''
+  -t, --template=''
+
+oc annotate
+      --all=false
+  -f, --filename=[]
+      --no-headers=false
+  -o, --output=''
+      --output-version=''
+      --overwrite=false
+      --record=false
+      --resource-version=''
+  -l, --selector=''
+  -a, --show-all=true
+      --show-labels=false
+      --sort-by=''
+  -t, --template=''
+
+oc expose
+      --container-port=''
+      --create-external-load-balancer=false
+      --dry-run=false
+      --external-ip=''
+  -f, --filename=[]
+      --generator=''
+      --hostname=''
+  -l, --labels=''
+      --load-balancer-ip=''
+      --name=''
+      --no-headers=false
+  -o, --output=''
+      --output-version=''
+      --overrides=''
+      --path=''
+      --port=''
+      --protocol=''
+      --record=false
+      --save-config=false
+      --selector=''
+      --session-affinity=''
+  -a, --show-all=true
+      --show-labels=false
+      --sort-by=''
+      --target-port=''
+  -t, --template=''
+      --type=''
+
+oc delete
+      --all=false
+      --cascade=true
+  -f, --filename=[]
+      --grace-period=-1
+      --ignore-not-found=false
+  -o, --output=''
+  -l, --selector=''
+      --timeout=0
+
+oc scale
+      --current-replicas=-1
+  -f, --filename=[]
+  -o, --output=''
+      --record=false
+      --replicas=-1
+      --resource-version=''
+      --timeout=0
+
+oc autoscale
+      --cpu-percent=-1
+      --dry-run=false
+  -f, --filename=[]
+      --generator='horizontalpodautoscaler/v1beta1'
+      --max=-1
+      --min=-1
+      --name=''
+      --no-headers=false
+  -o, --output=''
+      --output-version=''
+      --record=false
+      --save-config=false
+  -a, --show-all=true
+      --show-labels=false
+      --sort-by=''
+  -t, --template=''
+
+oc secrets new
+      --confirm=false
+      --no-headers=false
+  -o, --output=''
+      --output-version=''
+  -q, --quiet=false
+  -a, --show-all=true
+      --show-labels=false
+      --sort-by=''
+  -t, --template=''
+      --type=''
+
+oc secrets new-dockercfg
+      --docker-email=''
+      --docker-password=''
+      --docker-server='https
+      --docker-username=''
+      --no-headers=false
+  -o, --output=''
+      --output-version=''
+  -a, --show-all=true
+      --show-labels=false
+      --sort-by=''
+  -t, --template=''
+
+oc secrets new-basicauth
+      --ca-cert=''
+      --gitconfig=''
+      --no-headers=false
+  -o, --output=''
+      --output-version=''
+      --password=''
+      --prompt=false
+  -a, --show-all=true
+      --show-labels=false
+      --sort-by=''
+  -t, --template=''
+      --username=''
+
+oc secrets new-sshauth
+      --ca-cert=''
+      --gitconfig=''
+      --no-headers=false
+  -o, --output=''
+      --output-version=''
+  -a, --show-all=true
+      --show-labels=false
+      --sort-by=''
+      --ssh-privatekey=''
+  -t, --template=''
+
+oc secrets add
+      --for=[mount]
+
+oc serviceaccounts new-token
+  -l, --labels=''
+      --timeout=30s
+
+oc logs
+  -c, --container=''
+  -f, --follow=false
+      --interactive=false
+      --limit-bytes=0
+  -p, --previous=false
+      --since=0
+      --since-time=''
+      --tail=-1
+      --timestamps=false
+      --version=0
+
+oc rsh
+  -c, --container=''
+  -T, --no-tty=false
+      --shell='/bin/sh'
+  -t, --tty=false
+
+oc rsync
+  -c, --container=''
+      --delete=false
+      --exclude=''
+      --include=''
+      --no-perms=false
+      --progress=false
+  -q, --quiet=false
+      --strategy=''
+
+oc port-forward
+  -p, --pod=''
+
+oc debug
+      --as-root=false
+  -c, --container=''
+  -f, --filename=''
+      --keep-annotations=false
+      --keep-liveness=false
+      --keep-readiness=false
+  -I, --no-stdin=false
+  -T, --no-tty=false
+      --node-name=''
+      --one-container=false
+  -o, --output=''
+      --output-version=''
+      --template=''
+  -t, --tty=false
+
+oc exec
+  -c, --container=''
+  -p, --pod=''
+  -i, --stdin=false
+  -t, --tty=false
+
+oc proxy
+      --accept-hosts='^localhost$,^127\.0\.0\.1$,^\[
+      --accept-paths='^/.*'
+      --address='127.0.0.1'
+      --api-prefix='/'
+      --disable-filter=false
+  -p, --port=8001
+      --reject-methods='POST,PUT,PATCH'
+      --reject-paths='^/api/.*/exec,^/api/.*/run,^/api/.*/attach'
+  -u, --unix-socket=''
+  -w, --www=''
+  -P, --www-prefix='/static/'
+
+oc attach
+  -c, --container=''
+  -i, --stdin=false
+  -t, --tty=false
+
+oc run
+      --attach=false
+      --command=false
+      --dry-run=false
+      --env=[]
+      --expose=false
+      --generator=''
+      --hostport=-1
+      --image=''
+  -l, --labels=''
+      --leave-stdin-open=false
+      --limits=''
+      --no-headers=false
+  -o, --output=''
+      --output-version=''
+      --overrides=''
+      --port=-1
+      --record=false
+  -r, --replicas=1
+      --requests=''
+      --restart='Always'
+      --rm=false
+      --save-config=false
+      --service-generator='service/v2'
+      --service-overrides=''
+  -a, --show-all=true
+      --show-labels=false
+      --sort-by=''
+  -i, --stdin=false
+  -t, --template=''
+      --tty=false
+
+oc create
+  -f, --filename=[]
+  -o, --output=''
+      --record=false
+      --save-config=false
+      --schema-cache-dir='~/.kube/schema'
+      --validate=false
+
+oc create namespace
+      --dry-run=false
+      --generator='namespace/v1'
+      --no-headers=false
+  -o, --output=''
+      --output-version=''
+      --save-config=false
+      --schema-cache-dir='~/.kube/schema'
+  -a, --show-all=true
+      --show-labels=false
+      --sort-by=''
+  -t, --template=''
+      --validate=false
+
+oc create secret docker-registry
+      --docker-email=''
+      --docker-password=''
+      --docker-server='https
+      --docker-username=''
+      --dry-run=false
+      --generator='secret-for-docker-registry/v1'
+      --no-headers=false
+  -o, --output=''
+      --output-version=''
+      --save-config=false
+      --schema-cache-dir='~/.kube/schema'
+  -a, --show-all=true
+      --show-labels=false
+      --sort-by=''
+  -t, --template=''
+      --validate=false
+
+oc create secret generic
+      --dry-run=false
+      --from-file=[]
+      --from-literal=[]
+      --generator='secret/v1'
+      --no-headers=false
+  -o, --output=''
+      --output-version=''
+      --save-config=false
+      --schema-cache-dir='~/.kube/schema'
+  -a, --show-all=true
+      --show-labels=false
+      --sort-by=''
+  -t, --template=''
+      --type=''
+      --validate=false
+
+oc create configmap
+      --dry-run=false
+      --from-file=[]
+      --from-literal=[]
+      --generator='configmap/v1'
+      --no-headers=false
+  -o, --output=''
+      --output-version=''
+      --save-config=false
+      --schema-cache-dir='~/.kube/schema'
+  -a, --show-all=true
+      --show-labels=false
+      --sort-by=''
+  -t, --template=''
+      --validate=false
+
+oc create serviceaccount
+      --dry-run=false
+      --generator='serviceaccount/v1'
+      --no-headers=false
+  -o, --output=''
+      --output-version=''
+      --save-config=false
+      --schema-cache-dir='~/.kube/schema'
+  -a, --show-all=true
+      --show-labels=false
+      --sort-by=''
+  -t, --template=''
+      --validate=false
+
+oc create route edge
+      --ca-cert=''
+      --cert=''
+      --hostname=''
+      --key=''
+  -o, --output=''
+      --path=''
+      --port=''
+      --schema-cache-dir='~/.kube/schema'
+      --service=''
+      --validate=false
+
+oc create route passthrough
+      --hostname=''
+  -o, --output=''
+      --port=''
+      --schema-cache-dir='~/.kube/schema'
+      --service=''
+      --validate=false
+
+oc create route reencrypt
+      --ca-cert=''
+      --cert=''
+      --dest-ca-cert=''
+      --hostname=''
+      --key=''
+  -o, --output=''
+      --path=''
+      --port=''
+      --schema-cache-dir='~/.kube/schema'
+      --service=''
+      --validate=false
+
+oc replace
+      --cascade=false
+  -f, --filename=[]
+      --force=false
+      --grace-period=-1
+  -o, --output=''
+      --record=false
+      --save-config=false
+      --schema-cache-dir='~/.kube/schema'
+      --timeout=0
+      --validate=false
+
+oc apply
+  -f, --filename=[]
+  -o, --output=''
+      --record=false
+      --schema-cache-dir='~/.kube/schema'
+      --validate=false
+
+oc patch
+  -f, --filename=[]
+  -o, --output=''
+  -p, --patch=''
+      --record=false
+      --type='strategic'
+
+oc process
+  -f, --filename=''
+  -l, --labels=''
+  -o, --output='json'
+      --output-version=''
+      --parameters=false
+      --raw=false
+  -t, --template=''
+  -v, --value=[]
+
+oc export
+      --all=true
+      --all-namespaces=false
+      --as-template=''
+      --exact=false
+  -f, --filename=[]
+      --no-headers=false
+  -o, --output=''
+      --output-version=''
+      --raw=false
+  -l, --selector=''
+  -a, --show-all=true
+      --show-labels=false
+      --sort-by=''
+  -t, --template=''
+
+oc policy who-can
+      --all-namespaces=false
+
+oc policy add-role-to-user
+      --role-namespace=''
+  -z, --serviceaccount=[]
+
+oc policy remove-role-from-user
+      --role-namespace=''
+  -z, --serviceaccount=[]
+
+oc policy add-role-to-group
+      --role-namespace=''
+
+oc policy remove-role-from-group
+      --role-namespace=''
+
+oc convert
+  -f, --filename=[]
+      --local=true
+      --no-headers=false
+  -o, --output=''
+      --output-version=''
+      --schema-cache-dir='~/.kube/schema'
+  -a, --show-all=true
+      --show-labels=false
+      --sort-by=''
+  -t, --template=''
+      --validate=false
+
+oc config view
+      --flatten=false
+      --merge=true
+      --minify=false
+      --no-headers=false
+  -o, --output=''
+      --output-version=''
+      --raw=false
+  -a, --show-all=true
+      --show-labels=false
+      --sort-by=''
+  -t, --template=''
+
+oc config set-cluster
+      --api-version=''
+      --certificate-authority=''
+      --embed-certs=false
+      --insecure-skip-tls-verify=false
+      --server=''
+
+oc config set-credentials
+      --client-certificate=''
+      --client-key=''
+      --embed-certs=false
+      --password=''
+      --token=''
+      --username=''
+
+oc config set-context
+      --cluster=''
+      --namespace=''
+      --user=''
+
+oc whoami
+  -c, --context=false
+  -t, --token=false
