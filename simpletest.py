@@ -90,14 +90,14 @@ class Handler():
 
 	def open_book_with_sheet(self,name):
 		try:
-			book = xlrd.open_workbook(self.bookName)
+			book = xlrd.open_workbook(self.bookName, formatting_info=True)
 			tablesheet = book.sheet_by_name(name)
 			print 'in try'
 		except:
 			book = xlwt.Workbook()
 			book.add_sheet(name)
 			book.save(self.bookName)
-			book = xlrd.open_workbook(self.bookName)
+			book = xlrd.open_workbook(self.bookName, formatting_info=True)
 			tablesheet = book.sheet_by_name(name)
 			print 'in except'
 		finally:
@@ -127,6 +127,41 @@ class Handler():
 		for item in list:
 			self.f.write(str(item) + '\n')
 
+	def save_compare(self, bookName):
+		'''update the xls for compare highlight and save a change file''' #to be updated
+		book = xlrd.open_workbook(bookName, formatting_info=True)
+		tablesheet = book.sheet_by_name("all")
+		nrow = tablesheet.nrows
+		ncol = tablesheet.ncols
+
+		newL = []
+		oldL = []
+		'''
+	#	editBook = copy(book)
+	#	sheet = editBook.get_sheet(0)
+
+		for i in range(nrow-1):
+			latest = tablesheet.cell(rowx=i,colx=ncol-1).value
+			last = tablesheet.cell(rowx=i,colx=ncol-2).value
+			if latest != last:
+				sheet.write(i, ncol-1, str(latest), test.color4bold(color='red'))
+				print latest
+	#	editBook.save(bookName)
+		'''
+		
+		'''
+		for i in range(nrow-1):
+			newL.append(tablesheet.cell(rowx=i,colx=ncol-1).value) # row/col index starts from 0
+			oldL.append(tablesheet.cell(rowx=i,colx=ncol-2).value
+		'''
+	def diff(self):
+		if self.diff == False:
+			pass
+		else:
+			pass
+
+
+
 class oc(Handler):
 	def __init__(self):
 		Handler.__init__(self)
@@ -153,6 +188,11 @@ if __name__ == '__main__':
 	test.sheet = test.book.sheet_by_index(0) 
 	test.colWriteNum = test.sheet.ncols # write from col 0, so does not need + 1
 
+	test.diff = False
+	if "diff" in sys.argv:
+		self.diff = True
+		sys.argv.remove("diff")
+
 	if len(sys.argv)<2: logTitle = raw_input("Please input a title for this version of result, suggest '3.2.0.x' :")
 	else: logTitle = sys.argv[1]
 	writeList = test.call_command_title("")  #	whole command page - test.commandTitleStr
@@ -173,7 +213,12 @@ if __name__ == '__main__':
 			
 
 
+
 	editBook.save("octracker.xls")
+	test.save_compare("octracker.xls")
+
+
+
 	test.f.close()
 
 
