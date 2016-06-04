@@ -8,13 +8,16 @@ status
 project
 explain
 
-Build and Deploy Commands
+Build and Deploy Commands 
 deploy
-previousssssssssss changedddddddddddddd forrrrrrrr thestttttttttt!!!!!!!
+rollback
+new-build
+start-build
+cancel-build
 import-image
 tag
 
-Application Management Commands
+Application Management Commands    commit
 get
 describe
 edit
