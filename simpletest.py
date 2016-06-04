@@ -21,11 +21,13 @@ class Handler():
 			return subprocess.Popen(command, stderr=subprocess.PIPE).stderr.read()
 		else:
 			return subprocess.Popen(command, stdout=subprocess.PIPE).stdout.read()  # command output is from oc stdout
+	
 	def get_command_title(self,outputStr):
 		commandList = []
 		for i in range(outputStr.count(':')):
 			commandList.append(outputStr.split(':')[i].split('\n')[-1])
 		return commandList
+	
 	def get_commands(self,pageStr,title):
 		''' input: title - str, title name, e.g. "Basic Commands"
 			output: (commandsL,descriptionL)  
@@ -118,7 +120,6 @@ class Handler():
 			if color: self.sheet.write(self.start_row+i, self.colWriteNum, value ,style=self.color4bold(color=color)) 
 			else: self.sheet.write(self.start_row+i, self.colWriteNum, value)
 		self.start_row = self.start_row + i +1
-
 		
 	def append_log(self, list=[], title=[]):
 		self.f.write('\n%s\n'%title)
@@ -127,40 +128,21 @@ class Handler():
 		for item in list:
 			self.f.write(str(item) + '\n')
 
-	def save_compare(self, bookName):
-		'''update the xls for compare highlight and save a change file''' #to be updated
-		book = xlrd.open_workbook(bookName, formatting_info=True)
-		tablesheet = book.sheet_by_name("all")
-		nrow = tablesheet.nrows
-		ncol = tablesheet.ncols
-
-		newL = []
-		oldL = []
-		'''
-	#	editBook = copy(book)
-	#	sheet = editBook.get_sheet(0)
-
-		for i in range(nrow-1):
-			latest = tablesheet.cell(rowx=i,colx=ncol-1).value
-			last = tablesheet.cell(rowx=i,colx=ncol-2).value
-			if latest != last:
-				sheet.write(i, ncol-1, str(latest), test.color4bold(color='red'))
-				print latest
-	#	editBook.save(bookName)
-		'''
-		
-		'''
-		for i in range(nrow-1):
-			newL.append(tablesheet.cell(rowx=i,colx=ncol-1).value) # row/col index starts from 0
-			oldL.append(tablesheet.cell(rowx=i,colx=ncol-2).value
-		'''
 	def check_diff(self):
+		''' diff will save a file compare the new log with last time added log. 
+			*NOTE for pre action for next run:
+			Before next time to use this py script, need to `git add log` to save the changed "log" for baseline, will compare next log with this baseline,
+			otherwise, git diff will only compare next new log with last log'''
+
 		if self.diff == False:
-			return "nothing changed!"
+			return "not require for log diff!"
 		else:
-			return subprocess.Popen("git diff log".split(), stdout=subprocess.PIPE).stdout.read() 
-
-
+			diffLog = subprocess.Popen("git diff log".split(), stdout=subprocess.PIPE).stdout.read()
+			diff_f=open("diff_log",'w')
+			diff_f.write(diffLog)
+			diff_f.close()
+			if diffLog == '': return "\nNothing changed!"
+			return diffLog 
 
 class oc(Handler):
 	def __init__(self):
@@ -189,7 +171,7 @@ if __name__ == '__main__':
 	test.colWriteNum = test.sheet.ncols # write from col 0, so does not need + 1
 
 	test.diff = False
-	if "diff" in sys.argv:
+	if "diff" in sys.argv:   # diff will save a file compare the new log with last time added log.  
 		test.diff = True
 		sys.argv.remove("diff")
 
@@ -201,22 +183,15 @@ if __name__ == '__main__':
 	test.sheet.write(0, test.colWriteNum, logTitle, test.color4bold(color='green'))
 	test.insert_cmds_for_titles( writeList) # write top level commands
 
-
-
 	for oclist in test.ocLists:
 		print '\n============================================'
 		print oclist
 		for ocCmd in oclist:
-		#	print ocCmd
 			outputStr = test.call(ocCmd)
 			flags = test.get_flags(outputStr, ocCmd)
 			
 
-
-
 	editBook.save("octracker.xls")
-	test.save_compare("octracker.xls")
-
 
 
 	test.f.close()
