@@ -9,6 +9,7 @@ class Handler():
 		self.start_row = 1
 		self.bookName = "octracker.xls"
 		self.f=open("log",'w')
+		self.subGroups = ["vailable Commands:", "daemon sets:", "application flows:"  ]	# for looking for sub commands
 
 	def call(self, *args):
 		if type(args[0]) == list:
@@ -47,6 +48,37 @@ class Handler():
 			commandsL.append(cmd)
 		return (commandsL, descriptionL)
 
+	def get_flags(self, pageStr, ocCmd):
+		''' start from root oc command, like `create`, and get all subcommands/subcommands flags'''
+
+		flags = []
+		commands = []
+		if "ptions:" in pageStr:	## FILTER FLAGS
+			flagStr = pageStr.split("ptions:\n")[1].split('\n\n')[0]
+			flagLines = re.split("\n",flagStr)
+			for line in flagLines:
+				flags.append(line.split(':')[0])
+			self.append_log(list=flags, title='oc '+ocCmd)
+
+		for sub in self.subGroups:	## FILTER SUB COMMANDS
+			if sub in pageStr:
+				self.get_sub_cmds(sub+"\n", pageStr, ocCmd, commands)
+
+		return flags
+
+	def get_sub_cmds(self, subGroup, pageStr, ocCmd, commands):
+		subcmdPageStr = pageStr.split(subGroup)[1].split('\n\n')[0]
+		subCmdNamesL = self.get_sub_command_name(subcmdPageStr)
+		print 'find sub: ' + str(subCmdNamesL)
+		
+		nextLevel = self.get_next_level_flags(ocCmd, subCmdNamesL)
+
+		subcmdStr = nextLevel[0]
+		subcmdFlagsL = nextLevel[1]
+		pageStr = nextLevel[2]
+		commands.append(subcmdStr)
+		flags.append(subcmdFlagsL)
+
 	def get_sub_command_name(self, subcmdPageStr):
 		subCmd_namesL = []
 		cmdLines = re.split("\n",subcmdPageStr)
@@ -55,31 +87,6 @@ class Handler():
 			subCmd_namesL.append(sub_cmd)
 
 		return subCmd_namesL
-
-	def get_flags(self, pageStr, ocCmd):
-		''' start from root oc command, like `create`, and get all subcommands/subcommands flags'''
-
-		flags = []
-		commands = []
-		if "ptions:" in pageStr:
-			flagStr = pageStr.split("ptions:\n")[1].split('\n\n')[0]
-			flagLines = re.split("\n",flagStr)
-			for line in flagLines:
-				flags.append(line.split(':')[0])
-			self.append_log(list=flags, title='oc '+ocCmd)
-
-		if "vailable Commands" in pageStr:
-			subcmdPageStr = pageStr.split("vailable Commands:\n")[1].split('\n\n')[0]
-			subCmdNamesL = self.get_sub_command_name(subcmdPageStr)
-			nextLevel = self.get_next_level_flags(ocCmd, subCmdNamesL)
-
-			subcmdStr = nextLevel[0]
-			subcmdFlagsL = nextLevel[1]
-			pageStr = nextLevel[2]
-			commands.append(subcmdStr)
-			flags.append(subcmdFlagsL)
-
-		return flags
 
 	def get_next_level_flags(self, ocCmd, subcmdL):   #ocCmd, subcmdL
 		for subcmd in subcmdL:  # subcmdL= namespace, secret, ...

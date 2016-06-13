@@ -217,6 +217,84 @@ oc edit
       --save-config=false
       --windows-line-endings=false
 
+oc set env
+      --all=false
+  -c, --containers='*'
+  -e, --env=[]
+  -f, --filename=[]
+      --list=false
+  -o, --output=''
+      --output-version=''
+      --overwrite=true
+      --resource-version=''
+  -l, --selector=''
+
+oc set volumes
+      --add=false
+      --all=false
+      --claim-mode='ReadWriteOnce'
+      --claim-name=''
+      --claim-size=''
+      --confirm=false
+  -c, --containers='*'
+  -f, --filename=[]
+      --list=false
+  -m, --mount-path=''
+      --name=''
+  -o, --output=''
+      --output-version=''
+      --overwrite=false
+      --path=''
+      --remove=false
+      --secret-name=''
+  -l, --selector=''
+      --source=''
+  -t, --type=''
+
+oc set probe
+      --all=false
+  -c, --containers='*'
+      --failure-threshold=0
+  -f, --filename=[]
+      --get-url=''
+      --initial-delay-seconds=0
+      --liveness=false
+      --no-headers=false
+      --open-tcp=''
+  -o, --output=''
+      --output-version=''
+      --period-seconds=0
+      --readiness=false
+      --remove=false
+  -l, --selector=''
+  -a, --show-all=true
+      --show-labels=false
+      --sort-by=''
+      --success-threshold=0
+  -t, --template=''
+      --timeout-seconds=0
+
+oc set triggers
+      --all=false
+      --auto=false
+  -c, --containers=''
+  -f, --filename=[]
+      --from-config=false
+      --from-github=false
+      --from-image=''
+      --from-webhook=false
+      --manual=false
+      --no-headers=false
+  -o, --output=''
+      --output-version=''
+      --remove=false
+      --remove-all=false
+  -l, --selector=''
+  -a, --show-all=true
+      --show-labels=false
+      --sort-by=''
+  -t, --template=''
+
 oc label
       --all=false
       --dry-run=false
