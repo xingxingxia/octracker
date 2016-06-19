@@ -63,6 +63,24 @@ version
 help
 ================================
 
+(oc options)
+      --api-version=''
+      --certificate-authority=''
+      --client-certificate=''
+      --client-key=''
+      --cluster=''
+      --config=''
+      --context=''
+      --insecure-skip-tls-verify=false
+      --log-flush-frequency=5s
+      --loglevel=0
+      --match-server-version=false
+  -n, --namespace=''
+      --server=''
+      --token=''
+      --user=''
+
+
 oc login
   -p, --password=''
   -u, --username=''

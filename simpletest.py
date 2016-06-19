@@ -50,7 +50,6 @@ class Handler():
 
 	def get_flags(self, pageStr, ocCmd):
 		''' start from root oc command, like `create`, and get all subcommands/subcommands flags'''
-
 		flags = []
 		commands = []
 		if "ptions:" in pageStr:	## FILTER FLAGS
@@ -63,14 +62,12 @@ class Handler():
 		for sub in self.subGroups:	## FILTER SUB COMMANDS
 			if sub in pageStr:
 				self.get_sub_cmds(sub+"\n", pageStr, ocCmd, commands)
-
 		return flags
 
 	def get_sub_cmds(self, subGroup, pageStr, ocCmd, commands):
 		subcmdPageStr = pageStr.split(subGroup)[1].split('\n\n')[0]
 		subCmdNamesL = self.get_sub_command_name(subcmdPageStr)
-		print 'find sub: ' + str(subCmdNamesL)
-		
+		print 'find sub > ' + str(subCmdNamesL)	
 		nextLevel = self.get_next_level_flags(ocCmd, subCmdNamesL)
 
 		subcmdStr = nextLevel[0]
@@ -85,7 +82,6 @@ class Handler():
 		for line in cmdLines:
 			sub_cmd = line.split()[0]		
 			subCmd_namesL.append(sub_cmd)
-
 		return subCmd_namesL
 
 	def get_next_level_flags(self, ocCmd, subcmdL):   #ocCmd, subcmdL
@@ -94,7 +90,6 @@ class Handler():
 			ocCmdSubCmd = (newCmd).split()
 			newPageStr = self.call(ocCmdSubCmd) # e.g ocCmd="create", subcmd='namespace'
 			flags = self.get_flags(newPageStr, newCmd)  
-
 		return (newCmd, flags, newPageStr)
 
 	def open_book_with_sheet(self,name):
@@ -151,6 +146,15 @@ class Handler():
 			if diffLog == '': return "\nNothing changed!"
 			return diffLog 
 
+	def get_oc_option_list(self):
+		self.commandTitleStr = subprocess.Popen(['oc','options'], stderr=subprocess.PIPE).stderr.read()
+		optionsParagraph = self.commandTitleStr.split('\n\n')[1]
+		optionL = []
+		lines =  optionsParagraph.split('\n')
+		for line in lines:
+			optionL.append(line.split(':')[0])
+		return optionL
+
 class oc(Handler):
 	def __init__(self):
 		Handler.__init__(self)
@@ -177,31 +181,38 @@ if __name__ == '__main__':
 	test.sheet = test.book.sheet_by_index(0) 
 	test.colWriteNum = test.sheet.ncols # write from col 0, so does not need + 1
 
+	# >>>>>>>>>>>>>> to see if need to output a diff file
 	test.diff = False
-	if "diff" in sys.argv:   # diff will save a file compare the new log with last time added log.  
+	if "diff" in sys.argv: 
 		test.diff = True
 		sys.argv.remove("diff")
 
 	if len(sys.argv)<2: logTitle = raw_input("Please input a title for this version of result, suggest '3.2.0.x' :")
 	else: logTitle = sys.argv[1]
-	writeList = test.call_command_title("")  #	whole command page - test.commandTitleStr
+	headerList = test.call_command_title("") 
+
+	# >>>>>>>>>>>>>> write version title to the excel dolumn, write top level commands
 	editBook = copy(test.book)
 	test.sheet = editBook.get_sheet(0)
 	test.sheet.write(0, test.colWriteNum, logTitle, test.color4bold(color='green'))
-	test.insert_cmds_for_titles( writeList) # write top level commands
-
+	test.insert_cmds_for_titles(headerList) 
+	
+	# >>>>>>>>>>>>>> write 'oc options'
+	ocOptionL = test.get_oc_option_list()
+	test.append_log(ocOptionL,'(oc options)')
+	print '============== (oc options) =============='
+	print ocOptionL
+	
+	# >>>>>>>>>>>>>> for each top level oc command, write all sub-commands and flags
 	for oclist in test.ocLists:
 		print '\n============================================'
 		print oclist
 		for ocCmd in oclist:
 			outputStr = test.call(ocCmd)
 			flags = test.get_flags(outputStr, ocCmd)
-			
-
+	
+	# >>>>>>>>>>>>>> save xls, log file, diff file
 	editBook.save("octracker.xls")
-
-
 	test.f.close()
+	print "\n\n>>>>>>>>>>> below are diff to the last 'git add' ;) <<<<<<<<<<< "
 	print test.check_diff()
-
-
