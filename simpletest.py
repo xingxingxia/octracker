@@ -7,15 +7,15 @@ from xlwt import easyxf
 class Handler(): 
 	def __init__(self):
 		self.start_row = 1
-		self.bookName = "octracker.xls"
-		self.f=open("log",'w')
+		self.bookName = ""
+	#	self.f=open("log",'w')
 		self.subGroups = ["vailable Commands:", "daemon sets:", "application flows:"  ]	# for looking for sub commands
 
 	def call(self, *args):
 		if type(args[0]) == list:
-			command = ["oc"] + args[0] + ["-h"]
+			command = [self.o] + args[0] + ["-h"]
 		else:
-			command = ["oc"] + list(args) + ["-h"]
+			command = [self.o] + list(args) + ["-h"]
 		print command
 
 		if subprocess.Popen(command, stderr=subprocess.PIPE).stderr.read(): # command output is from oc stderr 
@@ -57,7 +57,7 @@ class Handler():
 			flagLines = re.split("\n",flagStr)
 			for line in flagLines:
 				flags.append(line.split(':')[0])
-			self.append_log(list=flags, title='oc '+ocCmd)
+			self.append_log(list=flags, title=self.o +' '+ ocCmd)
 
 		for sub in self.subGroups:	## FILTER SUB COMMANDS
 			if sub in pageStr:
@@ -139,15 +139,18 @@ class Handler():
 		if self.diff == False:
 			return "not require for log diff!"
 		else:
-			diffLog = subprocess.Popen("git diff log".split(), stdout=subprocess.PIPE).stdout.read()
-			diff_f=open("diff_log",'w')
+			cmd = "git diff --unified=1000 %s"%self.logName
+			cmd2= "git diff %s"%self.logName
+			diffLog = subprocess.Popen(cmd.split(), stdout=subprocess.PIPE).stdout.read()
+			printLog = subprocess.Popen(cmd2.split(), stdout=subprocess.PIPE).stdout.read()
+			diff_f=open(self.o+"_difflog_"+self.v,'w')
 			diff_f.write(diffLog)
 			diff_f.close()
-			if diffLog == '': return "\nNothing changed!"
-			return diffLog 
+			if diffLog == '': print "\nNothing changed!"
+			else: print printLog
 
 	def get_oc_option_list(self):
-		self.commandTitleStr = subprocess.Popen(['oc','options'], stderr=subprocess.PIPE).stderr.read()
+		self.commandTitleStr = subprocess.Popen([self.o,'options'], stderr=subprocess.PIPE).stderr.read()
 		optionsParagraph = self.commandTitleStr.split('\n\n')[1]
 		optionL = []
 		lines =  optionsParagraph.split('\n')
@@ -177,20 +180,32 @@ class oc(Handler):
 
 if __name__ == '__main__':
 	test=oc()
+
+	# >>>>>>>>>>>>>> to see if it's oc or oadm command
+	if "oc" in sys.argv:
+		test.o = "oc"
+		sys.argv.remove("oc")
+	if "oadm" in sys.argv:
+		test.o = "oadm"
+		sys.argv.remove("oadm")   	
+	test.bookName = test.o + "tracker.xls"
+
 	test.open_book_with_sheet("all")
 	test.sheet = test.book.sheet_by_index(0) 
 	test.colWriteNum = test.sheet.ncols # write from col 0, so does not need + 1
 
-	# >>>>>>>>>>>>>> to see if need to output a diff file
+	# >>>>>>>>>>>>>> to see if need to output a diff file and open a log file to write
 	test.diff = False
 	if "diff" in sys.argv: 
 		test.diff = True
 		sys.argv.remove("diff")
 
-	if len(sys.argv)<2: logTitle = raw_input("Please input a title for this version of result, suggest '3.2.0.x' :")
-	else: logTitle = sys.argv[1]
+	if len(sys.argv)<2: test.v=logTitle = raw_input("Please input a title for this version of result, suggest '3.2.0.x' :")
+	else: test.v=logTitle = sys.argv[1]
 	headerList = test.call_command_title("") 
 
+	test.logName = test.o+"_log"
+	test.f=open(test.logName,'w')
 	# >>>>>>>>>>>>>> write version title to the excel dolumn, write top level commands
 	editBook = copy(test.book)
 	test.sheet = editBook.get_sheet(0)
@@ -199,8 +214,8 @@ if __name__ == '__main__':
 	
 	# >>>>>>>>>>>>>> write 'oc options'
 	ocOptionL = test.get_oc_option_list()
-	test.append_log(ocOptionL,'(oc options)')
-	print '============== (oc options) =============='
+	test.append_log(ocOptionL,'(%s options)'%test.o)
+	print '============== (%s options) =============='%test.o
 	print ocOptionL
 	
 	# >>>>>>>>>>>>>> for each top level oc command, write all sub-commands and flags
@@ -212,7 +227,7 @@ if __name__ == '__main__':
 			flags = test.get_flags(outputStr, ocCmd)
 	
 	# >>>>>>>>>>>>>> save xls, log file, diff file
-	editBook.save("octracker.xls")
+	editBook.save(test.bookName)
 	test.f.close()
 	print "\n\n>>>>>>>>>>> below are diff to the last 'git add' ;) <<<<<<<<<<< "
-	print test.check_diff()
+	test.check_diff()

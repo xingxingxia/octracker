@@ -6,7 +6,9 @@ new-project
 new-app
 status
 project
+projects
 explain
+cluster
 
 Build and Deploy Commands
 deploy
@@ -52,11 +54,13 @@ process
 export
 policy
 convert
+import
 
 Settings Commands
 logout
 config
 whoami
+completion
 
 Other Commands
 version
@@ -65,6 +69,7 @@ help
 
 (oc options)
       --api-version=''
+      --as=''
       --certificate-authority=''
       --client-certificate=''
       --client-key=''
@@ -74,6 +79,7 @@ help
       --insecure-skip-tls-verify=false
       --log-flush-frequency=5s
       --loglevel=0
+      --logspec=''
       --match-server-version=false
   -n, --namespace=''
       --server=''
@@ -110,10 +116,8 @@ oc new-app
   -l, --labels=''
   -L, --list=false
       --name=''
-      --no-headers=false
       --no-install=false
   -o, --output=''
-      --output-template=''
       --output-version=''
   -p, --param=[]
   -S, --search=false
@@ -128,8 +132,31 @@ oc status
 oc project
   -q, --short=false
 
+oc projects
+  -q, --short=false
+
 oc explain
+      --include-extended-apis=true
       --recursive=false
+
+oc cluster up
+      --create-machine=false
+      --docker-machine=''
+  -e, --env=[]
+      --host-config-dir='/var/lib/origin/openshift.local.config'
+      --host-data-dir=''
+      --host-volumes-dir='/var/lib/origin/openshift.local.volumes'
+      --image='openshift/origin'
+      --metrics=false
+      --public-hostname=''
+      --routing-suffix=''
+      --server-loglevel=0
+      --skip-registry-check=false
+      --use-existing-config=false
+      --version='latest'
+
+oc cluster down
+      --docker-machine=''
 
 oc deploy
       --cancel=false
@@ -161,17 +188,12 @@ oc new-build
   -i, --image-stream=[]
   -l, --labels=''
       --name=''
-      --no-headers=false
       --no-output=false
   -o, --output=''
       --output-version=''
-  -a, --show-all=true
-      --show-labels=false
-      --sort-by=''
       --source-image=''
       --source-image-path=''
       --strategy=''
-  -t, --template=''
       --to=''
       --to-docker=false
 
@@ -193,6 +215,7 @@ oc start-build
 oc cancel-build
       --dump-logs=false
       --restart=false
+      --state=[]
 
 oc import-image
       --all=false
@@ -204,6 +227,7 @@ oc tag
       --alias=false
   -d, --delete=false
       --insecure=false
+      --reference=false
       --scheduled=false
       --source=''
 
@@ -211,27 +235,34 @@ oc get
       --all-namespaces=false
       --export=false
   -f, --filename=[]
+      --include-extended-apis=true
   -L, --label-columns=[]
       --no-headers=false
   -o, --output=''
       --output-version=''
+  -R, --recursive=false
   -l, --selector=''
   -a, --show-all=true
       --show-labels=false
       --sort-by=''
-  -t, --template=''
+      --template=''
   -w, --watch=false
       --watch-only=false
 
 oc describe
   -f, --filename=[]
+      --include-extended-apis=true
+  -R, --recursive=false
   -l, --selector=''
+      --show-events=true
 
 oc edit
   -f, --filename=[]
+      --include-extended-apis=true
   -o, --output='yaml'
       --output-version=''
       --record=false
+  -R, --recursive=false
       --save-config=false
       --windows-line-endings=false
 
@@ -253,6 +284,7 @@ oc set volumes
       --claim-mode='ReadWriteOnce'
       --claim-name=''
       --claim-size=''
+      --configmap-name=''
       --confirm=false
   -c, --containers='*'
   -f, --filename=[]
@@ -289,8 +321,28 @@ oc set probe
       --show-labels=false
       --sort-by=''
       --success-threshold=0
-  -t, --template=''
+      --template=''
       --timeout-seconds=0
+
+oc set deployment-hook
+      --all=false
+  -c, --container=''
+  -e, --environment=[]
+      --failure-policy='ignore'
+  -f, --filename=[]
+      --mid=false
+      --no-headers=false
+  -o, --output=''
+      --output-version=''
+      --post=false
+      --pre=false
+      --remove=false
+  -l, --selector=''
+  -a, --show-all=true
+      --show-labels=false
+      --sort-by=''
+      --template=''
+  -v, --volumes=[]
 
 oc set triggers
       --all=false
@@ -301,6 +353,7 @@ oc set triggers
       --from-github=false
       --from-image=''
       --from-webhook=false
+      --from-webhook-allow-env=false
       --manual=false
       --no-headers=false
   -o, --output=''
@@ -311,38 +364,56 @@ oc set triggers
   -a, --show-all=true
       --show-labels=false
       --sort-by=''
-  -t, --template=''
+      --template=''
+
+oc set build-hook
+      --all=false
+      --command=false
+  -f, --filename=[]
+      --no-headers=false
+  -o, --output=''
+      --output-version=''
+      --post-commit=false
+      --remove=false
+      --script=''
+  -l, --selector=''
+  -a, --show-all=true
+      --show-labels=false
+      --sort-by=''
+      --template=''
 
 oc label
       --all=false
       --dry-run=false
   -f, --filename=[]
+      --include-extended-apis=true
       --no-headers=false
   -o, --output=''
       --output-version=''
       --overwrite=false
       --record=false
+  -R, --recursive=false
       --resource-version=''
   -l, --selector=''
   -a, --show-all=true
       --show-labels=false
       --sort-by=''
-  -t, --template=''
+      --template=''
 
 oc annotate
       --all=false
   -f, --filename=[]
-      --no-headers=false
-  -o, --output=''
-      --output-version=''
+      --include-extended-apis=true
+      --no-headers=false=''
       --overwrite=false
       --record=false
+  -R, --recursive=false
       --resource-version=''
   -l, --selector=''
   -a, --show-all=true
       --show-labels=false
       --sort-by=''
-  -t, --template=''
+      --template=''
 
 oc expose
       --container-port=''
@@ -363,6 +434,7 @@ oc expose
       --port=''
       --protocol=''
       --record=false
+  -R, --recursive=false
       --save-config=false
       --selector=''
       --session-affinity=''
@@ -370,7 +442,7 @@ oc expose
       --show-labels=false
       --sort-by=''
       --target-port=''
-  -t, --template=''
+      --template=''
       --type=''
 
 oc delete
@@ -379,15 +451,20 @@ oc delete
   -f, --filename=[]
       --grace-period=-1
       --ignore-not-found=false
+      --include-extended-apis=true
+      --now=false
   -o, --output=''
+  -R, --recursive=false
   -l, --selector=''
       --timeout=0
 
 oc scale
       --current-replicas=-1
   -f, --filename=[]
+      --include-extended-apis=true
   -o, --output=''
       --record=false
+  -R, --recursive=false
       --replicas=-1
       --resource-version=''
       --timeout=0
@@ -397,6 +474,7 @@ oc autoscale
       --dry-run=false
   -f, --filename=[]
       --generator='horizontalpodautoscaler/v1beta1'
+      --include-extended-apis=true
       --max=-1
       --min=-1
       --name=''
@@ -404,11 +482,12 @@ oc autoscale
   -o, --output=''
       --output-version=''
       --record=false
+  -R, --recursive=false
       --save-config=false
   -a, --show-all=true
       --show-labels=false
       --sort-by=''
-  -t, --template=''
+      --template=''
 
 oc secrets new
       --confirm=false
@@ -417,9 +496,8 @@ oc secrets new
       --output-version=''
   -q, --quiet=false
   -a, --show-all=true
-      --show-labels=false
-      --sort-by=''
-  -t, --template=''
+     dsfasf=''
+      --template=''
       --type=''
 
 oc secrets new-dockercfg
@@ -433,7 +511,7 @@ oc secrets new-dockercfg
   -a, --show-all=true
       --show-labels=false
       --sort-by=''
-  -t, --template=''
+      --template=''
 
 oc secrets new-basicauth
       --ca-cert=''
@@ -446,7 +524,7 @@ oc secrets new-basicauth
   -a, --show-all=true
       --show-labels=false
       --sort-by=''
-  -t, --template=''
+      --template=''
       --username=''
 
 oc secrets new-sshauth
@@ -459,7 +537,7 @@ oc secrets new-sshauth
       --show-labels=false
       --sort-by=''
       --ssh-privatekey=''
-  -t, --template=''
+      --template=''
 
 oc secrets add
       --for=[mount]
@@ -471,6 +549,7 @@ oc serviceaccounts new-token
 oc logs
   -c, --container=''
   -f, --follow=false
+      --include-extended-apis=true
       --interactive=false
       --limit-bytes=0
   -p, --previous=false
@@ -495,12 +574,14 @@ oc rsync
       --progress=false
   -q, --quiet=false
       --strategy=''
+  -w, --watch=false
 
 oc port-forward
   -p, --pod=''
 
 oc debug
       --as-root=false
+      --as-user=-1
   -c, --container=''
   -f, --filename=''
       --keep-annotations=false
@@ -548,6 +629,7 @@ oc run
       --generator=''
       --hostport=-1
       --image=''
+      --include-extended-apis=true
   -l, --labels=''
       --leave-stdin-open=false
       --limits=''
@@ -568,13 +650,15 @@ oc run
       --show-labels=false
       --sort-by=''
   -i, --stdin=false
-  -t, --template=''
-      --tty=false
+      --template=''
+  -t, --tty=false
 
 oc create
   -f, --filename=[]
+      --include-extended-apis=true
   -o, --output=''
       --record=false
+  -R, --recursive=false
       --save-config=false
       --schema-cache-dir='~/.kube/schema'
       --validate=false
@@ -590,7 +674,7 @@ oc create namespace
   -a, --show-all=true
       --show-labels=false
       --sort-by=''
-  -t, --template=''
+      --template=''
       --validate=false
 
 oc create secret docker-registry
@@ -600,6 +684,7 @@ oc create secret docker-registry
       --docker-username=''
       --dry-run=false
       --generator='secret-for-docker-registry/v1'
+      --include-extended-apis=true
       --no-headers=false
   -o, --output=''
       --output-version=''
@@ -608,7 +693,7 @@ oc create secret docker-registry
   -a, --show-all=true
       --show-labels=false
       --sort-by=''
-  -t, --template=''
+      --template=''
       --validate=false
 
 oc create secret generic
@@ -624,7 +709,7 @@ oc create secret generic
   -a, --show-all=true
       --show-labels=false
       --sort-by=''
-  -t, --template=''
+      --template=''
       --type=''
       --validate=false
 
@@ -641,12 +726,13 @@ oc create configmap
   -a, --show-all=true
       --show-labels=false
       --sort-by=''
-  -t, --template=''
+      --template=''
       --validate=false
 
 oc create serviceaccount
       --dry-run=false
       --generator='serviceaccount/v1'
+      --include-extended-apis=true
       --no-headers=false
   -o, --output=''
       --output-version=''
@@ -655,7 +741,7 @@ oc create serviceaccount
   -a, --show-all=true
       --show-labels=false
       --sort-by=''
-  -t, --template=''
+      --template=''
       --validate=false
 
 oc create route edge
@@ -691,13 +777,53 @@ oc create route reencrypt
       --service=''
       --validate=false
 
+oc create policybinding
+  -o, --output=''
+
+oc create deploymentconfig
+      --image=''
+  -o, --output=''
+
+oc create user
+      --full-name=''
+      --no-headers=false
+  -o, --output=''
+      --output-version=''
+  -a, --show-all=true
+      --show-labels=false
+      --sort-by=''
+      --template=''
+
+oc create identity
+      --no-headers=false
+  -o, --output=''
+      --output-version=''
+  -a, --show-all=true
+      --show-labels=false
+      --sort-by=''
+      --template=''
+
+oc create useridentitymapping
+      --no-headers=false
+  -o, --output=''
+      --output-version=''
+  -a, --show-all=true
+      --show-labels=false
+      --sort-by=''
+      --template=''
+
+oc create imagestream
+  -o, --output=''
+
 oc replace
       --cascade=false
   -f, --filename=[]
       --force=false
       --grace-period=-1
+      --include-extended-apis=true
   -o, --output=''
       --record=false
+  -R, --recursive=false
       --save-config=false
       --schema-cache-dir='~/.kube/schema'
       --timeout=0
@@ -705,16 +831,20 @@ oc replace
 
 oc apply
   -f, --filename=[]
+      --include-extended-apis=true
   -o, --output=''
       --record=false
+  -R, --recursive=false
       --schema-cache-dir='~/.kube/schema'
       --validate=false
 
 oc patch
   -f, --filename=[]
+      --include-extended-apis=true
   -o, --output=''
   -p, --patch=''
       --record=false
+  -R, --recursive=false
       --type='strategic'
 
 oc process
@@ -741,10 +871,17 @@ oc export
   -a, --show-all=true
       --show-labels=false
       --sort-by=''
-  -t, --template=''
+      --template=''
 
 oc policy who-can
       --all-namespaces=false
+
+oc policy can-i
+      --all-namespaces=false
+      --ignore-scopes=false
+      --list=false
+  -q, --quiet=false
+      --scopes=[]
 
 oc policy add-role-to-user
       --role-namespace=''
@@ -762,16 +899,35 @@ oc policy remove-role-from-group
 
 oc convert
   -f, --filename=[]
+      --include-extended-apis=true
       --local=true
       --no-headers=false
   -o, --output=''
       --output-version=''
+  -R, --recursive=false
       --schema-cache-dir='~/.kube/schema'
   -a, --show-all=true
       --show-labels=false
       --sort-by=''
-  -t, --template=''
+      --template=''
       --validate=false
+
+oc import docker-compose
+      --as-template=''
+      --dry-run=false
+  -f, --filename=[]
+      --generator='docker-compose/v1'
+  -o, --output=''
+      --output-version=''
+
+oc import app.json
+      --as-template=''
+      --dry-run=false
+  -f, --filename=[]
+      --generator='app-json/v1'
+      --image=''
+  -o, --output=''
+      --output-version=''
 
 oc config view
       --flatten=false
@@ -784,7 +940,7 @@ oc config view
   -a, --show-all=true
       --show-labels=false
       --sort-by=''
-  -t, --template=''
+      --template=''
 
 oc config set-cluster
       --api-version=''
@@ -805,6 +961,9 @@ oc config set-context
       --cluster=''
       --namespace=''
       --user=''
+
+oc config set
+      --set-raw-bytes=false
 
 oc whoami
   -c, --context=false
