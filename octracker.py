@@ -228,8 +228,8 @@ class run():
 
 if __name__ == '__main__':
 
-	run_oc = run('oc', 'sys.argv[1]')
+	run_oc = run('oc', sys.argv[1])
 	run_oc.run_diff()
-	run_oadm = run('oadm', 'sys.argv[2]')
+	run_oadm = run('oadm', sys.argv[2])
 	run_oadm.run_diff()
 
