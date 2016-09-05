@@ -93,14 +93,12 @@ class Handler():
 		try:
 			book = xlrd.open_workbook(self.bookName, formatting_info=True)
 			tablesheet = book.sheet_by_name(name)
-			print 'in my try'
 		except:
 			book = xlwt.Workbook()
 			book.add_sheet(name)
 			book.save(self.bookName)
 			book = xlrd.open_workbook(self.bookName, formatting_info=True)
 			tablesheet = book.sheet_by_name(name)
-			print 'in my except'
 		finally:
 			self.book = book
 			self.sheet = tablesheet
