@@ -9,8 +9,10 @@ project
 projects
 explain
 cluster
+idle
 
 Build and Deploy Commands
+rollout
 deploy
 rollback
 new-build
@@ -52,6 +54,8 @@ apply
 patch
 process
 export
+extract
+observe
 policy
 convert
 import
@@ -63,8 +67,8 @@ whoami
 completion
 
 Other Commands
-version
 help
+version
 ================================
 
 (oc options)
@@ -97,6 +101,7 @@ oc login
 oc new-project
       --description=''
       --display-name=''
+      --skip-config-write=false
 
 oc new-app
       --allow-missing-images=false
@@ -139,10 +144,14 @@ oc explain
       --include-extended-apis=true
       --recursive=false
 
+oc cluster down
+      --docker-machine=''
+
 oc cluster up
       --create-machine=false
       --docker-machine=''
   -e, --env=[]
+      --forward-ports=false
       --host-config-dir='/var/lib/origin/openshift.local.config'
       --host-data-dir=''
       --host-volumes-dir='/var/lib/origin/openshift.local.volumes'
@@ -153,14 +162,37 @@ oc cluster up
       --server-loglevel=0
       --skip-registry-check=false
       --use-existing-config=false
-      --version='latest'
+      --version=''
 
-oc cluster down
-      --docker-machine=''
+oc idle
+      --all=false
+      --all-namespaces=false
+      --dry-run=false
+      --resource-names-file=''
+  -l, --selector=''
+
+oc rollout history
+  -f, --filename=[]
+  -R, --recursive=false
+      --revision=0
+
+oc rollout pause
+  -f, --filename=[]
+  -R, --recursive=false
+
+oc rollout resume
+  -f, --filename=[]
+  -R, --recursive=false
+
+oc rollout undo
+  -f, --filename=[]
+  -R, --recursive=false
+      --to-revision=0
 
 oc deploy
       --cancel=false
       --enable-triggers=false
+      --follow=false
       --latest=false
       --retry=false
 
@@ -201,7 +233,7 @@ oc start-build
       --build-loglevel=''
       --commit=''
   -e, --env=[]
-      --follow=false
+  -F, --follow=false
       --from-build=''
       --from-dir=''
       --from-file=''
@@ -210,7 +242,8 @@ oc start-build
       --git-post-receive=''
       --git-repository=''
       --list-webhooks=''
-      --wait=false
+  -o, --output=''
+  -w, --wait=false
 
 oc cancel-build
       --dump-logs=false
@@ -240,9 +273,11 @@ oc get
       --no-headers=false
   -o, --output=''
       --output-version=''
+      --raw=''
   -R, --recursive=false
   -l, --selector=''
   -a, --show-all=true
+      --show-kind=false
       --show-labels=false
       --sort-by=''
       --template=''
@@ -271,10 +306,13 @@ oc set env
   -c, --containers='*'
   -e, --env=[]
   -f, --filename=[]
+      --from=''
       --list=false
   -o, --output=''
       --output-version=''
       --overwrite=true
+      --prefix=''
+      --resolve=false
       --resource-version=''
   -l, --selector=''
 
@@ -404,7 +442,9 @@ oc annotate
       --all=false
   -f, --filename=[]
       --include-extended-apis=true
-      --no-headers=false=''
+      --no-headers=false
+  -o, --output=''
+      --output-version=''
       --overwrite=false
       --record=false
   -R, --recursive=false
@@ -473,7 +513,7 @@ oc autoscale
       --cpu-percent=-1
       --dry-run=false
   -f, --filename=[]
-      --generator='horizontalpodautoscaler/v1beta1'
+      --generator='horizontalpodautoscaler/v1'
       --include-extended-apis=true
       --max=-1
       --min=-1
@@ -489,6 +529,12 @@ oc autoscale
       --sort-by=''
       --template=''
 
+oc secrets add
+      --for=[mount]
+
+oc secrets link
+      --for=[mount]
+
 oc secrets new
       --confirm=false
       --no-headers=false
@@ -496,22 +542,10 @@ oc secrets new
       --output-version=''
   -q, --quiet=false
   -a, --show-all=true
-     dsfasf=''
-      --template=''
-      --type=''
-
-oc secrets new-dockercfg
-      --docker-email=''
-      --docker-password=''
-      --docker-server='https
-      --docker-username=''
-      --no-headers=false
-  -o, --output=''
-      --output-version=''
-  -a, --show-all=true
       --show-labels=false
       --sort-by=''
       --template=''
+      --type=''
 
 oc secrets new-basicauth
       --ca-cert=''
@@ -527,6 +561,19 @@ oc secrets new-basicauth
       --template=''
       --username=''
 
+oc secrets new-dockercfg
+      --docker-email=''
+      --docker-password=''
+      --docker-server='https
+      --docker-username=''
+      --no-headers=false
+  -o, --output=''
+      --output-version=''
+  -a, --show-all=true
+      --show-labels=false
+      --sort-by=''
+      --template=''
+
 oc secrets new-sshauth
       --ca-cert=''
       --gitconfig=''
@@ -538,9 +585,6 @@ oc secrets new-sshauth
       --sort-by=''
       --ssh-privatekey=''
       --template=''
-
-oc secrets add
-      --for=[mount]
 
 oc serviceaccounts new-token
   -l, --labels=''
@@ -568,8 +612,8 @@ oc rsh
 oc rsync
   -c, --container=''
       --delete=false
-      --exclude=''
-      --include=''
+      --exclude=[]
+      --include=[]
       --no-perms=false
       --progress=false
   -q, --quiet=false
@@ -585,6 +629,7 @@ oc debug
   -c, --container=''
   -f, --filename=''
       --keep-annotations=false
+      --keep-init-containers=true
       --keep-liveness=false
       --keep-readiness=false
   -I, --no-stdin=false
@@ -663,6 +708,44 @@ oc create
       --schema-cache-dir='~/.kube/schema'
       --validate=false
 
+oc create clusterresourcequota
+      --hard=[]
+  -o, --output=''
+      --project-annotation-selector=''
+      --project-label-selector=''
+
+oc create configmap
+      --dry-run=false
+      --from-file=[]
+      --from-literal=[]
+      --generator='configmap/v1'
+      --no-headers=false
+  -o, --output=''
+      --output-version=''
+      --save-config=false
+      --schema-cache-dir='~/.kube/schema'
+  -a, --show-all=true
+      --show-labels=false
+      --sort-by=''
+      --template=''
+      --validate=false
+
+oc create deploymentconfig
+      --image=''
+  -o, --output=''
+
+oc create identity
+      --no-headers=false
+  -o, --output=''
+      --output-version=''
+  -a, --show-all=true
+      --show-labels=false
+      --sort-by=''
+      --template=''
+
+oc create imagestream
+  -o, --output=''
+
 oc create namespace
       --dry-run=false
       --generator='namespace/v1'
@@ -675,6 +758,59 @@ oc create namespace
       --show-labels=false
       --sort-by=''
       --template=''
+      --validate=false
+
+oc create policybinding
+  -o, --output=''
+
+oc create quota
+      --dry-run=false
+      --generator='resourcequotas/v1'
+      --hard=''
+      --no-headers=false
+  -o, --output=''
+      --output-version=''
+      --save-config=false
+      --schema-cache-dir='~/.kube/schema'
+      --scopes=''
+  -a, --show-all=true
+      --show-labels=false
+      --sort-by=''
+      --template=''
+      --validate=false
+
+oc create route edge
+      --ca-cert=''
+      --cert=''
+      --hostname=''
+      --insecure-policy=''
+      --key=''
+  -o, --output=''
+      --path=''
+      --port=''
+      --schema-cache-dir='~/.kube/schema'
+      --service=''
+      --validate=false
+
+oc create route passthrough
+      --hostname=''
+  -o, --output=''
+      --port=''
+      --schema-cache-dir='~/.kube/schema'
+      --service=''
+      --validate=false
+
+oc create route reencrypt
+      --ca-cert=''
+      --cert=''
+      --dest-ca-cert=''
+      --hostname=''
+      --key=''
+  -o, --output=''
+      --path=''
+      --port=''
+      --schema-cache-dir='~/.kube/schema'
+      --service=''
       --validate=false
 
 oc create secret docker-registry
@@ -713,11 +849,11 @@ oc create secret generic
       --type=''
       --validate=false
 
-oc create configmap
+oc create secret tls
+      --cert=''
       --dry-run=false
-      --from-file=[]
-      --from-literal=[]
-      --generator='configmap/v1'
+      --generator='secret-for-tls/v1'
+      --key=''
       --no-headers=false
   -o, --output=''
       --output-version=''
@@ -744,57 +880,8 @@ oc create serviceaccount
       --template=''
       --validate=false
 
-oc create route edge
-      --ca-cert=''
-      --cert=''
-      --hostname=''
-      --key=''
-  -o, --output=''
-      --path=''
-      --port=''
-      --schema-cache-dir='~/.kube/schema'
-      --service=''
-      --validate=false
-
-oc create route passthrough
-      --hostname=''
-  -o, --output=''
-      --port=''
-      --schema-cache-dir='~/.kube/schema'
-      --service=''
-      --validate=false
-
-oc create route reencrypt
-      --ca-cert=''
-      --cert=''
-      --dest-ca-cert=''
-      --hostname=''
-      --key=''
-  -o, --output=''
-      --path=''
-      --port=''
-      --schema-cache-dir='~/.kube/schema'
-      --service=''
-      --validate=false
-
-oc create policybinding
-  -o, --output=''
-
-oc create deploymentconfig
-      --image=''
-  -o, --output=''
-
 oc create user
       --full-name=''
-      --no-headers=false
-  -o, --output=''
-      --output-version=''
-  -a, --show-all=true
-      --show-labels=false
-      --sort-by=''
-      --template=''
-
-oc create identity
       --no-headers=false
   -o, --output=''
       --output-version=''
@@ -811,9 +898,6 @@ oc create useridentitymapping
       --show-labels=false
       --sort-by=''
       --template=''
-
-oc create imagestream
-  -o, --output=''
 
 oc replace
       --cascade=false
@@ -873,8 +957,44 @@ oc export
       --sort-by=''
       --template=''
 
-oc policy who-can
+oc extract
+      --confirm=false
+  -f, --filename=[]
+      --keys=[]
+      --no-headers=false
+  -o, --output=''
+      --output-version=''
+  -a, --show-all=true
+      --show-labels=false
+      --sort-by=''
+      --template=''
+      --to='.'
+
+oc observe
       --all-namespaces=false
+  -a, --argument=''
+  -d, --delete=''
+      --exit-after=0
+      --listen-addr='
+      --maximum-errors=20
+      --names=''
+      --no-headers=false
+      --object-env-var=''
+      --once=false
+      --output='jsonpath'
+      --print-metrics-on-exit=false
+      --resync-period=0
+      --retry-count=2
+      --retry-on-exit-code=0
+      --strict-templates=false
+      --type-env-var=''
+
+oc policy add-role-to-group
+      --role-namespace=''
+
+oc policy add-role-to-user
+      --role-namespace=''
+  -z, --serviceaccount=[]
 
 oc policy can-i
       --all-namespaces=false
@@ -883,19 +1003,15 @@ oc policy can-i
   -q, --quiet=false
       --scopes=[]
 
-oc policy add-role-to-user
+oc policy remove-role-from-group
       --role-namespace=''
-  -z, --serviceaccount=[]
 
 oc policy remove-role-from-user
       --role-namespace=''
   -z, --serviceaccount=[]
 
-oc policy add-role-to-group
-      --role-namespace=''
-
-oc policy remove-role-from-group
-      --role-namespace=''
+oc policy who-can
+      --all-namespaces=false
 
 oc convert
   -f, --filename=[]
@@ -912,14 +1028,6 @@ oc convert
       --template=''
       --validate=false
 
-oc import docker-compose
-      --as-template=''
-      --dry-run=false
-  -f, --filename=[]
-      --generator='docker-compose/v1'
-  -o, --output=''
-      --output-version=''
-
 oc import app.json
       --as-template=''
       --dry-run=false
@@ -928,6 +1036,37 @@ oc import app.json
       --image=''
   -o, --output=''
       --output-version=''
+
+oc import docker-compose
+      --as-template=''
+      --dry-run=false
+  -f, --filename=[]
+      --generator='docker-compose/v1'
+  -o, --output=''
+      --output-version=''
+
+oc config set
+      --set-raw-bytes=false
+
+oc config set-cluster
+      --api-version=''
+      --certificate-authority=''
+      --embed-certs=false
+      --insecure-skip-tls-verify=false
+      --server=''
+
+oc config set-context
+      --cluster=''
+      --namespace=''
+      --user=''
+
+oc config set-credentials
+      --client-certificate=''
+      --client-key=''
+      --embed-certs=false
+      --password=''
+      --token=''
+      --username=''
 
 oc config view
       --flatten=false
@@ -941,29 +1080,6 @@ oc config view
       --show-labels=false
       --sort-by=''
       --template=''
-
-oc config set-cluster
-      --api-version=''
-      --certificate-authority=''
-      --embed-certs=false
-      --insecure-skip-tls-verify=false
-      --server=''
-
-oc config set-credentials
-      --client-certificate=''
-      --client-key=''
-      --embed-certs=false
-      --password=''
-      --token=''
-      --username=''
-
-oc config set-context
-      --cluster=''
-      --namespace=''
-      --user=''
-
-oc config set
-      --set-raw-bytes=false
 
 oc whoami
   -c, --context=false

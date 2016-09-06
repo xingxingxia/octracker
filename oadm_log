@@ -1,41 +1,51 @@
 
-Basic Commands
-new-project
-policy
-groups
-
-Install Commands
+Component Installation
 router
 ipfailover
 registry
 
-Maintenance Commands
-build-chain
-diagnostics
-manage-node
-prune
+Security and Policy
+new-project
+policy
+groups
+ca
+overwrite-policy
 
-Settings Commands
-config
+Node Management
+create-node-config
+manage-node
+cordon
+uncordon
+drain
+taint
+pod-network
+
+Maintenance
+diagnostics
+prune
+build-chain
+migrate
+top
+
+Configuration
 create-kubeconfig
 create-api-client-config
-
-Advanced Commands
-pod-network
 create-bootstrap-project-template
 create-bootstrap-policy-file
-asdfsafd
-overwrite-policy
-create-node-config
-ca
+create-login-template
+create-provider-selection-template
+create-error-template
 
 Other Commands
-version
+completion
+config
 help
+version
 ================================
 
 (oadm options)
       --api-version=''
+      --as=''
       --certificate-authority=''
       --client-certificate=''
       --client-key=''
@@ -46,37 +56,13 @@ help
       --insecure-skip-tls-verify=false
       --log-flush-frequency=5s
       --loglevel=0
+      --logspec=''
       --match-server-version=false
   -n, --namespace=''
       --server=''
       --token=''
       --user=''
 
-
-oadm new-project
-      --admin=''
-      --admin-role='admin'
-      --description=''
-      --display-name=''
-      --node-selector=''
-
-oadm groups sync
-      --blacklist=''
-      --confirm=false
-      --no-headers=false
-  -o, --output='yaml'
-      --output-version=''
-  -a, --show-all=false
-   asdfsadf''
-  -t, --template=''
-      --type='ldap'
-      --whitelist=''
-
-oadm groups prune
-      --blacklist=''
-      --confirm=false
-      --sync-config=''
-      --whitelist=''
 
 oadm router
       --create=false
@@ -99,7 +85,6 @@ oadm router
       --labels='router=<name>'
       --latest-images=false
       --metrics-image=''
-      --no-headers=false
   -o, --output=''
       --output-version=''
       --ports='80
@@ -107,32 +92,24 @@ oadm router
       --secrets-as-env=false
       --selector=''
       --service-account='router'
-  -a, --show-all=false
-      --show-labels=false
-      --sort-by=''
       --stats-password=''
       --stats-port=1936
       --stats-user='admin'
       --subdomain=''
-  -t, --template=''
       --type='haproxy-router'
 
 oadm ipfailover
       --create=false
       --credentials=''
+      --dry-run=false
       --images='openshift3/ose-${component}
   -i, --interface=''
       --latest-images=false
-      --no-headers=false
   -o, --output=''
       --output-version=''
   -r, --replicas=1
   -l, --selector='ipfailover=<name>'
-      --service-account=''
-  -a, --show-all=false
-      --show-labels=false
-      --sort-by=''
-  -t, --template=''
+      --service-account='ipfailover'
       --type='keepalived'
       --virtual-ips=''
       --vrrp-id-offset=0
@@ -141,163 +118,91 @@ oadm ipfailover
 oadm registry
       --create=false
       --credentials=''
+      --daemonset=false
       --dry-run=false
+      --enforce-quota=false
       --images='openshift3/ose-${component}
       --labels='docker-registry=default'
       --latest-images=false
       --mount-host=''
-      --no-headers=false
   -o, --output=''
       --output-version=''
       --ports='5000'
       --replicas=1
       --selector=''
       --service-account='registry'
-  -a, --show-all=false
-      --show-labels=false
-      --sort-by=''
-  -t, --template=''
       --tls-certificate=''
       --tls-key=''
       --type='docker-registry'
       --volume='/registry'
 
-oadm build-chain
-      --all=false
-  -o, --output=''
-      --trigger-only=true
+oadm new-project
+      --admin=''
+      --admin-role='admin'
+      --description=''
+      --display-name=''
+      --node-selector=''
 
-oadm diagnostics
-      --cluster-context=''
-      --config=''
-      --context=''
-  -l, --diaglevel=1
-      --host=false
-      --images='openshift3/ose-${component}
-      --latest-images=false
-      --loglevel=0
-      --master-config=''
-      --node-config=''
-      --prevent-modification=false
-
-oadm manage-node
-      --dry-run=false
-      --evacuate=false
-      --force=false
-      --grace-period=30
-      --list-pods=false
-      --no-headers=false
-  -o, --output=''
-      --output-version=''
-      --pod-selector=''
-      --schedulable=false
-      --selector=''
-  -a, --show-all=false
-      --show-labels=false
-      --sort-by=''
-  -t, --template=''
-
-oadm prune builds
-      --confirm=false
-      --keep-complete=5
-      --keep-failed=1
-      --keep-younger-than=1h0m0s
-      --orphans=false
-
-oadm prune deployments
-      --confirm=false
-      --keep-complete=5
-      --keep-failed=1
-      --keep-younger-than=1h0m0s
-      --orphans=false
-
-oadm prune images
-      --certificate-authority=''
-      --confirm=false
-      --keep-tag-revisions=3
-      --keep-younger-than=1h0m0s
-      --registry-url=''
-
-oadm prune groups
+oadm groups prune
       --blacklist=''
       --confirm=false
       --sync-config=''
       --whitelist=''
 
-oadm config view
-      --flatten=false
-      --merge=true
-      --minify=false
+oadm groups sync
+      --blacklist=''
+      --confirm=false
       --no-headers=false
-  -o, --output=''
+  -o, --output='yaml'
       --output-version=''
-      --raw=false
   -a, --show-all=false
       --show-labels=false
       --sort-by=''
-  -t, --template=''
+      --sync-config=''
+      --template=''
+      --type='ldap'
+      --whitelist=''
 
-oadm config set-cluster
-      --api-version=''
-      --certificate-authority=''
-      --embed-certs=false
-      --insecure-skip-tls-verify=false
-      --server=''
+oadm ca create-key-pair
+      --overwrite=false
+      --private-key=''
+      --public-key=''
 
-oadm config set-credentials
-      --client-certificate=''
-      --client-key=''
-      --embed-certs=false
-      --password=''
-      --token=''
-      --username=''
-
-oadm config set-context
-      --cluster=''
-      --namespace=''
-      --user=''
-
-oadm create-kubeconfig
-      --certificate-authority=[openshift.local.config/master/ca.crt]
-      --client-certificate=''
-      --client-key=''
-      --kubeconfig='.kubeconfig'
+oadm ca create-master-certs
+      --cert-dir='openshift.local.config/master'
+      --certificate-authority=[]
+      --hostnames=[]
       --master='https
-      --namespace='default'
+      --overwrite=false
       --public-master=''
+      --signer-name='openshift-signer@1473065137'
 
-oadm create-api-client-config
-      --basename=''
-      --certificate-authority=[openshift.local.config/master/ca.crt]
-      --client-dir=''
-      --groups=[]
-      --master='https
-      --public-master=''
+oadm ca create-server-cert
+      --cert=''
+      --hostnames=[]
+      --key=''
+      --overwrite=true
       --signer-cert='openshift.local.config/master/ca.crt'
       --signer-key='openshift.local.config/master/ca.key'
       --signer-serial='openshift.local.config/master/ca.serial.txt'
-      --user=''
 
-oadm pod-network join-projects
-      --selector=''
-      --to=''
+oadm ca create-signer-cert
+      --cert='openshift.local.config/master/ca.crt'
+      --key='openshift.local.config/master/ca.key'
+      --name='openshift-signer@1473065137'
+      --overwrite=true
+      --serial='openshift.local.config/master/ca.serial.txt'
 
-oadm pod-network make-projects-global
-      --selector=''
+oadm ca decrypt
+      --in=''
+      --key=''
+      --out=''
 
-oadm create-bootstrap-project-template
-      --name='project-request'
-      --no-headers=false
-  -o, --output=''
-      --output-version=''
-  -a, --show-all=false
-      --show-labels=false
-      --sort-by=''
-  -t, --template=''
-
-oadm create-bootstrap-policy-file
-      --filename='openshift.local.config/master/policy.json'
-      --openshift-namespace='openshift'
+oadm ca encrypt
+      --genkey=''
+      --in=''
+      --key=''
+      --out=''
 
 oadm overwrite-policy
       --filename=''
@@ -327,43 +232,187 @@ oadm create-node-config
       --signer-serial='openshift.local.config/master/ca.serial.txt'
       --volume-dir='openshift.local.volumes'
 
-oadm ca create-master-certs
-      --cert-dir='openshift.local.config/master'
-      --certificate-authority=[]
-      --hostnames=[]
+oadm manage-node
+      --dry-run=false
+      --evacuate=false
+      --force=false
+      --grace-period=30
+      --list-pods=false
+      --no-headers=false
+  -o, --output=''
+      --output-version=''
+      --pod-selector=''
+      --schedulable=false
+      --selector=''
+  -a, --show-all=false
+      --show-labels=false
+      --sort-by=''
+      --template=''
+
+oadm drain
+      --delete-local-data=false
+      --force=false
+      --grace-period=-1
+      --ignore-daemonsets=false
+
+oadm taint
+      --all=false
+      --include-extended-apis=true
+      --no-headers=false
+  -o, --output=''
+      --output-version=''
+      --overwrite=false
+      --schema-cache-dir='~/.kube/schema'
+  -l, --selector=''
+  -a, --show-all=false
+      --show-labels=false
+      --sort-by=''
+      --template=''
+      --validate=true
+
+oadm pod-network isolate-projects
+      --selector=''
+
+oadm pod-network join-projects
+      --selector=''
+      --to=''
+
+oadm pod-network make-projects-global
+      --selector=''
+
+oadm diagnostics
+      --cluster-context=''
+      --config=''
+      --context=''
+  -l, --diaglevel=1
+      --host=false
+      --images='openshift3/ose-${component}
+      --latest-images=false
+      --loglevel=0
+      --logspec=''
+      --master-config=''
+      --node-config=''
+      --prevent-modification=false
+
+oadm prune builds
+      --confirm=false
+      --keep-complete=5
+      --keep-failed=1
+      --keep-younger-than=1h0m0s
+      --orphans=false
+
+oadm prune deployments
+      --confirm=false
+      --keep-complete=5
+      --keep-failed=1
+      --keep-younger-than=1h0m0s
+      --orphans=false
+
+oadm prune groups
+      --blacklist=''
+      --confirm=false
+      --sync-config=''
+      --whitelist=''
+
+oadm prune images
+      --certificate-authority=''
+      --confirm=false
+      --keep-tag-revisions=3
+      --keep-younger-than=1h0m0s
+      --prune-over-size-limit=false
+      --registry-url=''
+
+oadm build-chain
+      --all=false
+  -o, --output=''
+      --reverse=false
+      --trigger-only=true
+
+oadm migrate image-references
+      --all-namespaces=true
+      --confirm=false
+  -f, --filename=[]
+      --from-key=''
+      --include=[imagestream,image,secrets]
+  -o, --output=''
+      --to-key=''
+
+oadm migrate storage
+      --all-namespaces=true
+      --confirm=false
+  -f, --filename=[]
+      --from-key=''
+      --include=[*]
+  -o, --output=''
+      --to-key=''
+
+oadm create-kubeconfig
+      --certificate-authority=[openshift.local.config/master/ca.crt]
+      --client-certificate=''
+      --client-key=''
+      --kubeconfig='.kubeconfig'
       --master='https
-      --overwrite=false
+      --namespace='default'
       --public-master=''
-      --signer-name='openshift-signer@1468060059'
 
-oadm ca create-key-pair
-      --overwrite=false
-      --private-key=''
-      --public-key=''
-
-oadm ca create-server-cert
-      --cert=''
-      --hostnames=[]
-      --key=''
-      --overwrite=true
+oadm create-api-client-config
+      --basename=''
+      --certificate-authority=[openshift.local.config/master/ca.crt]
+      --client-dir=''
+      --groups=[]
+      --master='https
+      --public-master=''
       --signer-cert='openshift.local.config/master/ca.crt'
       --signer-key='openshift.local.config/master/ca.key'
       --signer-serial='openshift.local.config/master/ca.serial.txt'
+      --user=''
 
-oadm ca create-signer-cert
-      --cert='openshift.local.config/master/ca.crt'
-      --key='openshift.local.config/master/ca.key'
-      --name='openshift-signer@1468060059'
-      --overwrite=true
-      --serial='openshift.local.config/master/ca.serial.txt'
+oadm create-bootstrap-project-template
+      --name='project-request'
+      --no-headers=false
+  -o, --output=''
+      --output-version=''
+  -a, --show-all=false
+      --show-labels=false
+      --sort-by=''
+      --template=''
 
-oadm ca encrypt
-      --genkey=''
-      --in=''
-      --key=''
-      --out=''
+oadm create-bootstrap-policy-file
+      --filename='openshift.local.config/master/policy.json'
+      --openshift-namespace='openshift'
 
-oadm ca decrypt
-      --in=''
-      --key=''
-      --out=''
+oadm config set
+      --set-raw-bytes=false
+
+oadm config set-cluster
+      --api-version=''
+      --certificate-authority=''
+      --embed-certs=false
+      --insecure-skip-tls-verify=false
+      --server=''
+
+oadm config set-context
+      --cluster=''
+      --namespace=''
+      --user=''
+
+oadm config set-credentials
+      --client-certificate=''
+      --client-key=''
+      --embed-certs=false
+      --password=''
+      --token=''
+      --username=''
+
+oadm config view
+      --flatten=false
+      --merge=true
+      --minify=false
+      --no-headers=false
+  -o, --output=''
+      --output-version=''
+      --raw=false
+  -a, --show-all=false
+      --show-labels=false
+      --sort-by=''
+      --template=''
