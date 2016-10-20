@@ -9,7 +9,8 @@ class Handler():
 		self.start_row = 1
 		self.bookName = ""
 	#	self.ocLists = []
-		self.subGroups = ["vailable Commands:", "daemon sets:", "application flows:"  ]	# for looking for sub commands
+		self.subGroups = ["vailable Commands:", "daemon sets:", "application flows:" ,"iscover:" ,"embership:"\
+		"users and groups:" ,"pods and containers:", "repair system policy:"]	# for looking for sub commands
 
 	def call(self, *args):
 		if type(args[0]) == list:
