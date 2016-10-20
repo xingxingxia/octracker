@@ -9,7 +9,7 @@ class Handler():
 		self.start_row = 1
 		self.bookName = ""
 	#	self.ocLists = []
-		self.subGroups = ["vailable Commands:", "daemon sets:", "application flows:" ,"iscover:" ,"embership:"\
+		self.subGroups = ["vailable Commands:", "daemon sets:", "application flows:" , "anage secrets:","iscover:" ,"embership:"\
 		"users and groups:" ,"pods and containers:", "repair system policy:"]	# for looking for sub commands
 
 	def call(self, *args):
