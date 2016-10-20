@@ -143,6 +143,15 @@ oadm new-project
       --display-name=''
       --node-selector=''
 
+oadm groups new
+      --no-headers=false
+  -o, --output=''
+      --output-version=''
+  -a, --show-all=false
+      --show-labels=false
+      --sort-by=''
+      --template=''
+
 oadm groups prune
       --blacklist=''
       --confirm=false
@@ -175,7 +184,7 @@ oadm ca create-master-certs
       --master='https
       --overwrite=false
       --public-master=''
-      --signer-name='openshift-signer@1473065137'
+      --signer-name='openshift-signer@1476914530'
 
 oadm ca create-server-cert
       --cert=''
@@ -189,7 +198,7 @@ oadm ca create-server-cert
 oadm ca create-signer-cert
       --cert='openshift.local.config/master/ca.crt'
       --key='openshift.local.config/master/ca.key'
-      --name='openshift-signer@1473065137'
+      --name='openshift-signer@1476914532'
       --overwrite=true
       --serial='openshift.local.config/master/ca.serial.txt'
 
@@ -346,6 +355,14 @@ oadm migrate storage
   -o, --output=''
       --to-key=''
 
+oadm top node
+  -l, --selector=''
+
+oadm top pod
+      --all-namespaces=false
+      --containers=false
+  -l, --selector=''
+
 oadm create-kubeconfig
       --certificate-authority=[openshift.local.config/master/ca.crt]
       --client-certificate=''
@@ -381,6 +398,10 @@ oadm create-bootstrap-policy-file
       --filename='openshift.local.config/master/policy.json'
       --openshift-namespace='openshift'
 
+oadm config get-contexts
+      --no-headers=false
+  -o, --output=''
+
 oadm config set
       --set-raw-bytes=false
 
@@ -397,6 +418,8 @@ oadm config set-context
       --user=''
 
 oadm config set-credentials
+      --auth-provider=''
+      --auth-provider-arg=[]
       --client-certificate=''
       --client-key=''
       --embed-certs=false
