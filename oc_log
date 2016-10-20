@@ -176,11 +176,19 @@ oc rollout history
   -R, --recursive=false
       --revision=0
 
+oc rollout latest
+      --again=false
+  -o, --output=''
+
 oc rollout pause
   -f, --filename=[]
   -R, --recursive=false
 
 oc rollout resume
+  -f, --filename=[]
+  -R, --recursive=false
+
+oc rollout status
   -f, --filename=[]
   -R, --recursive=false
 
@@ -285,6 +293,7 @@ oc get
       --watch-only=false
 
 oc describe
+      --all-namespaces=false
   -f, --filename=[]
       --include-extended-apis=true
   -R, --recursive=false
@@ -299,6 +308,8 @@ oc edit
       --record=false
   -R, --recursive=false
       --save-config=false
+      --schema-cache-dir='~/.kube/schema'
+      --validate=false
       --windows-line-endings=false
 
 oc set env
@@ -382,6 +393,22 @@ oc set deployment-hook
       --template=''
   -v, --volumes=[]
 
+oc set image
+      --all=false
+  -f, --filename=[]
+      --local=false
+      --no-headers=false
+  -o, --output=''
+      --output-version=''
+      --record=false
+  -R, --recursive=false
+  -l, --selector=''
+  -a, --show-all=true
+      --show-labels=false
+      --sort-by=''
+      --source='istag'
+      --template=''
+
 oc set triggers
       --all=false
       --auto=false
@@ -456,6 +483,7 @@ oc annotate
       --template=''
 
 oc expose
+      --cluster-ip=''
       --container-port=''
       --create-external-load-balancer=false
       --dry-run=false
@@ -607,6 +635,7 @@ oc rsh
   -c, --container=''
   -T, --no-tty=false
       --shell='/bin/sh'
+      --timeout=10
   -t, --tty=false
 
 oc rsync
@@ -655,7 +684,7 @@ oc proxy
       --disable-filter=false
   -p, --port=8001
       --reject-methods='POST,PUT,PATCH'
-      --reject-paths='^/api/.*/exec,^/api/.*/run,^/api/.*/attach'
+      --reject-paths='^/api/.*/pods/.*/exec,^/api/.*/pods/.*/attach'
   -u, --unix-socket=''
   -w, --www=''
   -P, --www-prefix='/static/'
@@ -674,6 +703,7 @@ oc run
       --generator=''
       --hostport=-1
       --image=''
+      --image-pull-policy=''
       --include-extended-apis=true
   -l, --labels=''
       --leave-stdin-open=false
@@ -683,12 +713,14 @@ oc run
       --output-version=''
       --overrides=''
       --port=-1
+      --quiet=false
       --record=false
   -r, --replicas=1
       --requests=''
       --restart='Always'
       --rm=false
       --save-config=false
+      --schedule=''
       --service-generator='service/v2'
       --service-overrides=''
   -a, --show-all=true
@@ -719,6 +751,21 @@ oc create configmap
       --from-file=[]
       --from-literal=[]
       --generator='configmap/v1'
+      --no-headers=false
+  -o, --output=''
+      --output-version=''
+      --save-config=false
+      --schema-cache-dir='~/.kube/schema'
+  -a, --show-all=true
+      --show-labels=false
+      --sort-by=''
+      --template=''
+      --validate=false
+
+oc create deployment
+      --dry-run=false
+      --generator='deployment-basic/v1beta1'
+      --image=[]
       --no-headers=false
   -o, --output=''
       --output-version=''
@@ -865,6 +912,53 @@ oc create secret tls
       --template=''
       --validate=false
 
+oc create service clusterip
+      --clusterip=''
+      --dry-run=false
+      --generator='service-clusterip/v1'
+      --no-headers=false
+  -o, --output=''
+      --output-version=''
+      --save-config=false
+      --schema-cache-dir='~/.kube/schema'
+  -a, --show-all=true
+      --show-labels=false
+      --sort-by=''
+      --tcp=[]
+      --template=''
+      --validate=false
+
+oc create service loadbalancer
+      --dry-run=false
+      --generator='service-loadbalancer/v1'
+      --no-headers=false
+  -o, --output=''
+      --output-version=''
+      --save-config=false
+      --schema-cache-dir='~/.kube/schema'
+  -a, --show-all=true
+      --show-labels=false
+      --sort-by=''
+      --tcp=[]
+      --template=''
+      --validate=false
+
+oc create service nodeport
+      --dry-run=false
+      --generator='service-nodeport/v1'
+      --no-headers=false
+      --node-port=0
+  -o, --output=''
+      --output-version=''
+      --save-config=false
+      --schema-cache-dir='~/.kube/schema'
+  -a, --show-all=true
+      --show-labels=false
+      --sort-by=''
+      --tcp=[]
+      --template=''
+      --validate=false
+
 oc create serviceaccount
       --dry-run=false
       --generator='serviceaccount/v1'
@@ -917,6 +1011,7 @@ oc apply
   -f, --filename=[]
       --include-extended-apis=true
   -o, --output=''
+      --overwrite=true
       --record=false
   -R, --recursive=false
       --schema-cache-dir='~/.kube/schema'
@@ -925,10 +1020,17 @@ oc apply
 oc patch
   -f, --filename=[]
       --include-extended-apis=true
+      --local=false
+      --no-headers=false
   -o, --output=''
+      --output-version=''
   -p, --patch=''
       --record=false
   -R, --recursive=false
+  -a, --show-all=true
+      --show-labels=false
+      --sort-by=''
+      --template=''
       --type='strategic'
 
 oc process
@@ -998,10 +1100,12 @@ oc policy add-role-to-user
 
 oc policy can-i
       --all-namespaces=false
+      --groups=[]
       --ignore-scopes=false
       --list=false
   -q, --quiet=false
       --scopes=[]
+      --user=''
 
 oc policy remove-role-from-group
       --role-namespace=''
@@ -1045,6 +1149,10 @@ oc import docker-compose
   -o, --output=''
       --output-version=''
 
+oc config get-contexts
+      --no-headers=false
+  -o, --output=''
+
 oc config set
       --set-raw-bytes=false
 
@@ -1061,6 +1169,8 @@ oc config set-context
       --user=''
 
 oc config set-credentials
+      --auth-provider=''
+      --auth-provider-arg=[]
       --client-certificate=''
       --client-key=''
       --embed-certs=false
@@ -1082,5 +1192,6 @@ oc config view
       --template=''
 
 oc whoami
-  -c, --context=false
-  -t, --token=false
+  -c, --show-context=false
+      --show-server=false
+  -t, --show-token=false
