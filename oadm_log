@@ -59,6 +59,7 @@ version
       --logspec=''
       --match-server-version=false
   -n, --namespace=''
+      --request-timeout='0'
       --server=''
       --token=''
       --user=''
@@ -104,6 +105,7 @@ oadm ipfailover
       --dry-run=false
       --images='openshift3/ose-${component}
   -i, --interface=''
+      --iptables-chain='INPUT'
       --latest-images=false
   -o, --output=''
       --output-version=''
@@ -142,6 +144,51 @@ oadm new-project
       --description=''
       --display-name=''
       --node-selector=''
+
+oadm policy who-can
+      --all-namespaces=false
+
+oadm policy add-scc-to-user
+  -z, --serviceaccount=[]
+
+oadm policy remove-scc-from-user
+  -z, --serviceaccount=[]
+
+oadm policy reconcile-cluster-roles
+      --additive-only=true
+      --confirm=false
+      --no-headers=false
+  -o, --output='yaml'
+      --output-version=''
+  -a, --show-all=false
+      --show-labels=false
+      --sort-by=''
+      --template=''
+
+oadm policy reconcile-cluster-role-bindings
+      --additive-only=true
+      --confirm=false
+      --exclude-groups=[]
+      --exclude-users=[]
+      --no-headers=false
+  -o, --output='yaml'
+      --output-version=''
+  -a, --show-all=false
+      --show-labels=false
+      --sort-by=''
+      --template=''
+
+oadm policy reconcile-sccs
+      --additive-only=true
+      --confirm=false
+      --infrastructure-namespace='openshift-infra'
+      --no-headers=false
+  -o, --output='yaml'
+      --output-version=''
+  -a, --show-all=false
+      --show-labels=false
+      --sort-by=''
+      --template=''
 
 oadm groups new
       --no-headers=false
@@ -184,7 +231,7 @@ oadm ca create-master-certs
       --master='https
       --overwrite=false
       --public-master=''
-      --signer-name='openshift-signer@1476914530'
+      --signer-name='openshift-signer@1478124092'
 
 oadm ca create-server-cert
       --cert=''
@@ -198,7 +245,7 @@ oadm ca create-server-cert
 oadm ca create-signer-cert
       --cert='openshift.local.config/master/ca.crt'
       --key='openshift.local.config/master/ca.key'
-      --name='openshift-signer@1476914532'
+      --name='openshift-signer@1478124093'
       --overwrite=true
       --serial='openshift.local.config/master/ca.serial.txt'
 
@@ -300,6 +347,7 @@ oadm diagnostics
       --loglevel=0
       --logspec=''
       --master-config=''
+      --network-logdir='/tmp/openshift/'
       --node-config=''
       --prevent-modification=false
 
