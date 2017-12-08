@@ -1,10 +1,13 @@
 #!/usr/bin/env python
-import subprocess
+import subprocess, xlwt, xlrd
+from xlutils.copy import copy
 import sys, re
+from xlwt import easyxf
 
 class Handler(): 
 	def __init__(self):
 		self.start_row = 1
+		self.bookName = ""
 	#	self.f=open("log",'w')
 		self.subGroups = ["vailable Commands:", "daemon sets:", "application flows:"  ]	# for looking for sub commands
 
@@ -89,8 +92,41 @@ class Handler():
 			flags = self.get_flags(newPageStr, newCmd)  
 		return (newCmd, flags, newPageStr)
 
+	def open_book_with_sheet(self,name):
+		try:
+			book = xlrd.open_workbook(self.bookName, formatting_info=True)
+			tablesheet = book.sheet_by_name(name)
+			print 'in try'
+		except:
+			book = xlwt.Workbook()
+			book.add_sheet(name)
+			book.save(self.bookName)
+			book = xlrd.open_workbook(self.bookName, formatting_info=True)
+			tablesheet = book.sheet_by_name(name)
+			print 'in except'
+		finally:
+			self.book = book
+			self.sheet = tablesheet
+	
+	def color4bold(self, color):
+		'''for bold color: '''
+		style = xlwt.easyxf('font: bold true;'
+               'borders: left no_line, right no_line, top no_line, bottom no_line;'
+               'font: color %s'%color)
+		return style
+
+	def insert_rows(self, commandList=[], color=''):
+		i = 0
+		for value in commandList:
+			i = commandList.index(value)
+			if color: self.sheet.write(self.start_row+i, self.colWriteNum, value ,style=self.color4bold(color=color)) 
+			else: self.sheet.write(self.start_row+i, self.colWriteNum, value)
+		self.start_row = self.start_row + i +1
+		
 	def append_log(self, list=[], title=[]):
 		self.f.write('\n%s\n'%title)
+		self.insert_rows([title], color='black')
+		self.insert_rows(list)
 		for item in list:
 			self.f.write(str(item) + '\n')
 
@@ -134,11 +170,13 @@ class oc(Handler):
 
 	def insert_cmds_for_titles(self, valueList):
 		print "command titles are \n" + str(valueList) + '\n======= above are top level titles =========\n'
+		self.insert_rows(["======= top level titles ========="], color='aqua')
 		for title in valueList:
 			commandList = self.get_commands(pageStr=self.commandTitleStr, title=title)[0]	
 			self.append_log(commandList,title)
 			self.ocLists.append(commandList)
 		self.f.write('================================\n')
+		self.insert_rows(["================================"], color='aqua')
 
 if __name__ == '__main__':
 	test=oc()
@@ -150,6 +188,11 @@ if __name__ == '__main__':
 	if "oadm" in sys.argv:
 		test.o = "oadm"
 		sys.argv.remove("oadm")   	
+	test.bookName = test.o + "tracker.xls"
+
+	test.open_book_with_sheet("all")
+	test.sheet = test.book.sheet_by_index(0) 
+	test.colWriteNum = test.sheet.ncols # write from col 0, so does not need + 1
 
 	# >>>>>>>>>>>>>> to see if need to output a diff file and open a log file to write
 	test.diff = False
@@ -161,14 +204,18 @@ if __name__ == '__main__':
 	else: test.v=logTitle = sys.argv[1]
 	headerList = test.call_command_title("") 
 
-	test.logName = test.o + "_" + test.v + "_cmds.txt"
+	test.logName = test.o+"_log"
 	test.f=open(test.logName,'w')
+	# >>>>>>>>>>>>>> write version title to the excel dolumn, write top level commands
+	editBook = copy(test.book)
+	test.sheet = editBook.get_sheet(0)
+	test.sheet.write(0, test.colWriteNum, logTitle, test.color4bold(color='green'))
 	test.insert_cmds_for_titles(headerList) 
 	
 	# >>>>>>>>>>>>>> write 'oc options'
 	ocOptionL = test.get_oc_option_list()
-	test.append_log(ocOptionL,'%s options'%test.o)
-	print '============== %s options =============='%test.o
+	test.append_log(ocOptionL,'(%s options)'%test.o)
+	print '============== (%s options) =============='%test.o
 	print ocOptionL
 	
 	# >>>>>>>>>>>>>> for each top level oc command, write all sub-commands and flags
@@ -180,5 +227,7 @@ if __name__ == '__main__':
 			flags = test.get_flags(outputStr, ocCmd)
 	
 	# >>>>>>>>>>>>>> save xls, log file, diff file
+	editBook.save(test.bookName)
 	test.f.close()
-	print "\n\n>>>>>>>>>>> Please check the *_cmds.txt file <<<<<<<<<<< "
+	print "\n\n>>>>>>>>>>> below are diff to the last 'git add' ;) <<<<<<<<<<< "
+	test.check_diff()

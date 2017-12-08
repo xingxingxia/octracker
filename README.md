@@ -1,38 +1,28 @@
-[PRE ACTION]
+**Usage**
+For oc
+    $ oc version # Get version v3.8.11
+    $ python simpletest.py v3.8.11 oc # This command will output cmd and flags in a file named "oc_v3.8.11_cmds.txt"
+    Then:
+    $ export PATH=/path/to/directory:$PATH # /path/to/directory includes another oc, e.g. v3.7.9
+    $ oc version # Get version v3.7.9
+    $ python simpletest.py v3.7.9 oc # Similarly
+    $ diff -U 1000 oc_v3.7.9_cmds.txt oc_v3.8.11_cmds.txt > diff
+    $ grep -e "^[+-]" -e "^ *o" diff | grep -B 1 -e "^[+-]" | grep -v -e "+++" -e "^--" # Will get below output
+    ...
+    oc get
+    +      --include-uninitialized=false
+    -      --schema-cache-dir='~/.kube/schema'
+    ...
 
-  Before very first time: install python and 3rd party lib (subprocess, xlwt, xlrd, xlutils)
 
-  To check updates - Before each single run: `git add oc_log` and `git add oadm_log`, they are no used only for track and compare log
+For oadm
+  If you installed oadm, just run similar `python simpletest.py v3.8.11 oadm`.  Otherwise, make a fake oadm first:
+    $ touch /bin/oadm
+    $ chmod a+x /bin/oadm
+    $ vi /bin/oadm
+    #!/bin/bash
+    echo "oadm comes from `which oc` adm"
+    oc adm $*
 
-[EXEC examples & OUTPUT]
-
-
-        $ python simpletest.py vxxx oc (or "oadm")
-
-  output 2 files:
-
-  1) octracker.xls - a history file for all details
-
-  2) oc_log - latest commands
-
-
-        $ python simpletest.py vxxx2 diff
-
-  output 3 files:
-
-  1) same as above
-
-  2) same as above
-
-  3) diff file (oc_difflog_vx.x.x) will output the diff by "git diff" between this version of "oc_log" and lastest version of "oc_log".
-
-*[NOTE]
-
-  1) first param "vxxx" is an example, it could be any name.
-
-  2) to explain why need git add before each run, below metion about "1st/2nd/3rd time" is an example
-
-  If use "diff", before the 2nd time to run the script, need to do git add first. Otherwise, the 3rd log will only compare with the 1st one.
-
-  If do git add just after the 1st time, it's not a big problem, BUT manullay do git diff again will not show any different again, this is not good for manual check git diff.
+  Then run above `python simpletest.py v3.8.11 oadm` and so on
 
