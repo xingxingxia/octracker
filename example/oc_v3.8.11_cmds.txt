@@ -75,27 +75,7 @@ plugin
 version
 ================================
 
-(oc options)
-      --as=''
-      --as-group=[]
-      --cache-dir='/home/xxia/.kube/http-cache'
-      --certificate-authority=''
-      --client-certificate=''
-      --client-key=''
-      --cluster=''
-      --config=''
-      --context=''
-      --insecure-skip-tls-verify=false
-      --log-flush-frequency=5s
-      --loglevel=0
-      --logspec=''
-      --match-server-version=false
-  -n, --namespace=''
-      --request-timeout='0'
-      --server=''
-      --token=''
-      --user=''
-
+oc types
 
 oc login
   -p, --password=''
@@ -159,6 +139,8 @@ oc explain
       --include-extended-apis=true
       --recursive=false
 
+oc cluster
+
 oc cluster down
       --docker-machine=''
 
@@ -213,6 +195,8 @@ oc cluster up
       --skip-registry-check=false
       --use-existing-config=false
       --version=''
+
+oc rollout
 
 oc rollout cancel
   -f, --filename=[]
@@ -386,6 +370,8 @@ oc edit
       --schema-cache-dir='~/.kube/schema'
       --validate=false
       --windows-line-endings=false
+
+oc set
 
 oc set env
       --all=false
@@ -704,6 +690,8 @@ oc autoscale
       --sort-by=''
       --template=''
 
+oc secrets
+
 oc secrets add
       --for=[mount]
 
@@ -761,8 +749,14 @@ oc secrets new-sshauth
       --ssh-privatekey=''
       --template=''
 
+oc secrets unlink
+
+oc serviceaccounts
+
 oc serviceaccounts create-kubeconfig
       --with-namespace=''
+
+oc serviceaccounts get-token
 
 oc serviceaccounts new-token
   -l, --labels=''
@@ -888,6 +882,8 @@ oc run
 
 oc cp
   -c, --container=''
+
+oc adm
 
 oc create
       --allow-missing-template-keys=true
@@ -1077,6 +1073,9 @@ oc create poddisruptionbudget
       --template=''
       --validate=false
 
+oc create policybinding
+  -o, --output=''
+
 oc create quota
       --allow-missing-template-keys=true
       --dry-run=false
@@ -1130,6 +1129,8 @@ oc create rolebinding
       --template=''
       --user=[]
       --validate=false
+
+oc create route
 
 oc create route edge
       --allow-missing-template-keys=true
@@ -1194,6 +1195,8 @@ oc create route reencrypt
       --validate=false
       --wildcard-policy=''
 
+oc create secret
+
 oc create secret docker-registry
       --allow-missing-template-keys=true
       --append-hash=false
@@ -1252,6 +1255,8 @@ oc create secret tls
       --sort-by=''
       --template=''
       --validate=false
+
+oc create service
 
 oc create service clusterip
       --allow-missing-template-keys=true
@@ -1511,6 +1516,8 @@ oc observe
       --strict-templates=false
       --type-env-var=''
 
+oc policy
+
 oc policy add-role-to-group
       --allow-missing-template-keys=true
       --dry-run=false
@@ -1626,6 +1633,8 @@ oc policy who-can
       --sort-by=''
       --template=''
 
+oc auth
+
 oc auth can-i
       --all-namespaces=false
   -q, --quiet=false
@@ -1659,6 +1668,8 @@ oc convert
       --template=''
       --validate=false
 
+oc import
+
 oc import app.json
       --as-template=''
       --dry-run=false
@@ -1672,10 +1683,26 @@ oc import app.json
       --sort-by=''
       --template=''
 
+oc image
+
+oc logout
+
+oc config
+
+oc config current-context
+
+oc config delete-cluster
+
+oc config delete-context
+
+oc config get-clusters
+
 oc config get-contexts
       --allow-missing-template-keys=true
       --no-headers=false
   -o, --output=''
+
+oc config rename-context
 
 oc config set
       --set-raw-bytes=false
@@ -1701,6 +1728,10 @@ oc config set-credentials
       --token=''
       --username=''
 
+oc config unset
+
+oc config use-context
+
 oc config view
       --allow-missing-template-keys=true
       --flatten=false
@@ -1719,11 +1750,17 @@ oc whoami
       --show-server=false
   -t, --show-token=false
 
+oc completion
+
+oc ex
+
 oc ex build-chain
       --all=false
   -o, --output=''
       --reverse=false
       --trigger-only=true
+
+oc ex config
 
 oc ex config patch
   -p, --patch=''
@@ -1803,3 +1840,32 @@ oc ex sync-groups
       --template=''
       --type='ldap'
       --whitelist=''
+
+oc ex validate
+
+oc help
+
+oc plugin
+
+oc version
+
+oc options
+      --as=''
+      --as-group=[]
+      --cache-dir='/home/xxia/.kube/http-cache'
+      --certificate-authority=''
+      --client-certificate=''
+      --client-key=''
+      --cluster=''
+      --config=''
+      --context=''
+      --insecure-skip-tls-verify=false
+      --log-flush-frequency=5s
+      --loglevel=0
+      --logspec=''
+      --match-server-version=false
+  -n, --namespace=''
+      --request-timeout='0'
+      --server=''
+      --token=''
+      --user=''

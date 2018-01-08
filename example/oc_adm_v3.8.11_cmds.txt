@@ -42,29 +42,7 @@ completion
 config
 ================================
 
-(oadm options)
-      --as=''
-      --as-group=[]
-      --cache-dir='/home/xxia/.kube/http-cache'
-      --certificate-authority=''
-      --client-certificate=''
-      --client-key=''
-      --cluster=''
-      --config=''
-      --context=''
-      --insecure-skip-tls-verify=false
-      --log-flush-frequency=5s
-      --loglevel=0
-      --logspec=''
-      --match-server-version=false
-  -n, --namespace=''
-      --request-timeout='0'
-      --server=''
-      --token=''
-      --user=''
-
-
-oadm router
+oc adm router
       --ciphers=''
       --create=false
       --default-cert=''
@@ -108,7 +86,7 @@ oadm router
       --template=''
       --type='haproxy-router'
 
-oadm ipfailover
+oc adm ipfailover
       --check-interval=2
       --check-script=''
       --create=false
@@ -133,7 +111,7 @@ oadm ipfailover
       --vrrp-id-offset=0
   -w, --watch-port=80
 
-oadm registry
+oc adm registry
       --create=false
       --daemonset=false
       --dry-run=false
@@ -159,14 +137,20 @@ oadm registry
       --type='docker-registry'
       --volume='/registry'
 
-oadm new-project
+oc adm new-project
       --admin=''
       --admin-role='admin'
       --description=''
       --display-name=''
       --node-selector=''
 
-oadm groups new
+oc adm policy
+
+oc adm groups
+
+oc adm groups add-users
+
+oc adm groups new
       --allow-missing-template-keys=true
       --no-headers=false
   -o, --output=''
@@ -175,13 +159,15 @@ oadm groups new
       --sort-by=''
       --template=''
 
-oadm groups prune
+oc adm groups prune
       --blacklist=''
       --confirm=false
       --sync-config=''
       --whitelist=''
 
-oadm groups sync
+oc adm groups remove-users
+
+oc adm groups sync
       --allow-missing-template-keys=true
       --blacklist=''
       --confirm=false
@@ -195,12 +181,14 @@ oadm groups sync
       --type='ldap'
       --whitelist=''
 
-oadm ca create-key-pair
+oc adm ca
+
+oc adm ca create-key-pair
       --overwrite=false
       --private-key=''
       --public-key=''
 
-oadm ca create-master-certs
+oc adm ca create-master-certs
       --cert-dir='openshift.local.config/master'
       --certificate-authority=[]
       --expire-days=730
@@ -209,9 +197,9 @@ oadm ca create-master-certs
       --overwrite=false
       --public-master=''
       --signer-expire-days=1825
-      --signer-name='openshift-signer@1512742444'
+      --signer-name='openshift-signer@1513652457'
 
-oadm ca create-server-cert
+oc adm ca create-server-cert
       --cert=''
       --expire-days=730
       --hostnames=[]
@@ -221,36 +209,38 @@ oadm ca create-server-cert
       --signer-key='openshift.local.config/master/ca.key'
       --signer-serial='openshift.local.config/master/ca.serial.txt'
 
-oadm ca create-signer-cert
+oc adm ca create-signer-cert
       --cert='openshift.local.config/master/ca.crt'
       --expire-days=1825
       --key='openshift.local.config/master/ca.key'
-      --name='openshift-signer@1512742444'
+      --name='openshift-signer@1513652458'
       --overwrite=true
       --serial='openshift.local.config/master/ca.serial.txt'
 
-oadm ca decrypt
+oc adm ca decrypt
       --in=''
       --key=''
       --out=''
 
-oadm ca encrypt
+oc adm ca encrypt
       --genkey=''
       --in=''
       --key=''
       --out=''
 
-oadm certificate approve
+oc adm certificate
+
+oc adm certificate approve
   -f, --filename=[]
   -o, --output=''
   -R, --recursive=false
 
-oadm certificate deny
+oc adm certificate deny
   -f, --filename=[]
   -o, --output=''
   -R, --recursive=false
 
-oadm create-node-config
+oc adm create-node-config
       --allow-disabled-docker=false
       --certificate-authority=[openshift.local.config/master/ca.crt]
       --client-certificate=''
@@ -275,7 +265,7 @@ oadm create-node-config
       --signer-serial='openshift.local.config/master/ca.serial.txt'
       --volume-dir='openshift.local.volumes'
 
-oadm manage-node
+oc adm manage-node
       --allow-missing-template-keys=true
       --dry-run=false
       --evacuate=false
@@ -292,20 +282,18 @@ oadm manage-node
       --sort-by=''
       --template=''
 
-oadm cordon
-      --dry-run=false
+oc adm cordon
 
-oadm uncordon
-      --dry-run=false
+oc adm uncordon
 
-oadm drain
+oc adm drain
       --delete-local-data=false
       --force=false
       --grace-period=-1
       --ignore-daemonsets=false
       --timeout=0s
 
-oadm taint
+oc adm taint
       --all=false
       --allow-missing-template-keys=true
       --include-extended-apis=true
@@ -321,17 +309,19 @@ oadm taint
       --template=''
       --validate=false
 
-oadm pod-network isolate-projects
+oc adm pod-network
+
+oc adm pod-network isolate-projects
       --selector=''
 
-oadm pod-network join-projects
+oc adm pod-network join-projects
       --selector=''
       --to=''
 
-oadm pod-network make-projects-global
+oc adm pod-network make-projects-global
       --selector=''
 
-oadm diagnostics
+oc adm diagnostics
       --cluster-context=''
       --config=''
       --context=''
@@ -350,27 +340,29 @@ oadm diagnostics
       --node-config=''
       --prevent-modification=false
 
-oadm prune builds
+oc adm prune
+
+oc adm prune builds
       --confirm=false
       --keep-complete=5
       --keep-failed=1
       --keep-younger-than=1h0m0s
       --orphans=false
 
-oadm prune deployments
+oc adm prune deployments
       --confirm=false
       --keep-complete=5
       --keep-failed=1
       --keep-younger-than=1h0m0s
       --orphans=false
 
-oadm prune groups
+oc adm prune groups
       --blacklist=''
       --confirm=false
       --sync-config=''
       --whitelist=''
 
-oadm prune images
+oc adm prune images
       --all=true
       --certificate-authority=''
       --confirm=false
@@ -380,13 +372,17 @@ oadm prune images
       --prune-over-size-limit=false
       --registry-url=''
 
-oadm build-chain
+oc adm build-chain
       --all=false
   -o, --output=''
       --reverse=false
       --trigger-only=true
 
-oadm migrate etcd-ttl
+oc adm migrate
+
+oc adm migrate authorization
+
+oc adm migrate etcd-ttl
       --cacert=''
       --cert=''
       --etcd-address=''
@@ -394,7 +390,7 @@ oadm migrate etcd-ttl
       --lease-duration=0s
       --ttl-keys-prefix=''
 
-oadm migrate image-references
+oc adm migrate image-references
       --all-namespaces=true
       --confirm=false
   -f, --filename=[]
@@ -404,7 +400,7 @@ oadm migrate image-references
   -o, --output=''
       --to-key=''
 
-oadm migrate storage
+oc adm migrate storage
       --all-namespaces=true
       --confirm=false
   -f, --filename=[]
@@ -414,14 +410,20 @@ oadm migrate storage
   -o, --output=''
       --to-key=''
 
-oadm top node
+oc adm top
+
+oc adm top images
+
+oc adm top imagestreams
+
+oc adm top node
       --heapster-namespace='openshift-infra'
       --heapster-port=''
       --heapster-scheme='https'
       --heapster-service='heapster'
   -l, --selector=''
 
-oadm top pod
+oc adm top pod
       --all-namespaces=false
       --containers=false
       --heapster-namespace='openshift-infra'
@@ -430,7 +432,7 @@ oadm top pod
       --heapster-service='heapster'
   -l, --selector=''
 
-oadm verify-image-signature
+oc adm verify-image-signature
       --expected-identity=''
       --insecure=false
       --public-key='pubring.gpg'
@@ -438,7 +440,7 @@ oadm verify-image-signature
       --remove-all=false
       --save=false
 
-oadm create-kubeconfig
+oc adm create-kubeconfig
       --certificate-authority=[openshift.local.config/master/ca.crt]
       --client-certificate=''
       --client-key=''
@@ -447,7 +449,7 @@ oadm create-kubeconfig
       --namespace='default'
       --public-master=''
 
-oadm create-api-client-config
+oc adm create-api-client-config
       --basename=''
       --certificate-authority=[openshift.local.config/master/ca.crt]
       --client-dir=''
@@ -460,7 +462,7 @@ oadm create-api-client-config
       --signer-serial='openshift.local.config/master/ca.serial.txt'
       --user=''
 
-oadm create-bootstrap-project-template
+oc adm create-bootstrap-project-template
       --allow-missing-template-keys=true
       --name='project-request'
       --no-headers=false
@@ -470,30 +472,50 @@ oadm create-bootstrap-project-template
       --sort-by=''
       --template=''
 
-oadm create-bootstrap-policy-file
+oc adm create-bootstrap-policy-file
       --filename='openshift.local.config/master/policy.json'
       --openshift-namespace='openshift'
 
-oadm config get-contexts
+oc adm create-login-template
+
+oc adm create-provider-selection-template
+
+oc adm create-error-template
+
+oc adm completion
+
+oc adm config
+
+oc adm config current-context
+
+oc adm config delete-cluster
+
+oc adm config delete-context
+
+oc adm config get-clusters
+
+oc adm config get-contexts
       --allow-missing-template-keys=true
       --no-headers=false
   -o, --output=''
 
-oadm config set
+oc adm config rename-context
+
+oc adm config set
       --set-raw-bytes=false
 
-oadm config set-cluster
+oc adm config set-cluster
       --certificate-authority=''
       --embed-certs=false
       --insecure-skip-tls-verify=false
       --server=''
 
-oadm config set-context
+oc adm config set-context
       --cluster=''
       --namespace=''
       --user=''
 
-oadm config set-credentials
+oc adm config set-credentials
       --auth-provider=''
       --auth-provider-arg=[]
       --client-certificate=''
@@ -503,7 +525,11 @@ oadm config set-credentials
       --token=''
       --username=''
 
-oadm config view
+oc adm config unset
+
+oc adm config use-context
+
+oc adm config view
       --allow-missing-template-keys=true
       --flatten=false
       --merge=true
@@ -515,3 +541,24 @@ oadm config view
       --show-labels=false
       --sort-by=''
       --template=''
+
+oc adm options
+      --as=''
+      --as-group=[]
+      --cache-dir='/home/xxia/.kube/http-cache'
+      --certificate-authority=''
+      --client-certificate=''
+      --client-key=''
+      --cluster=''
+      --config=''
+      --context=''
+      --insecure-skip-tls-verify=false
+      --log-flush-frequency=5s
+      --loglevel=0
+      --logspec=''
+      --match-server-version=false
+  -n, --namespace=''
+      --request-timeout='0'
+      --server=''
+      --token=''
+      --user=''

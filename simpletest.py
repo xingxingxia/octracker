@@ -4,21 +4,19 @@ import sys, re
 
 class Handler(): 
 	def __init__(self):
-		self.start_row = 1
-	#	self.f=open("log",'w')
 		self.subGroups = ["vailable Commands:", "daemon sets:", "application flows:"  ]	# for looking for sub commands
 
 	def call(self, *args):
 		if type(args[0]) == list:
-			command = [self.o] + args[0] + ["-h"]
+			command = self.o.split() + args[0] + ["-h"]
 		else:
-			command = [self.o] + list(args) + ["-h"]
+			command = self.o.split() + list(args) + ["-h"]
 		print command
 
-		if subprocess.Popen(command, stderr=subprocess.PIPE).stderr.read(): # command output is from oc stderr 
-			return subprocess.Popen(command, stderr=subprocess.PIPE).stderr.read()
-		else:
-			return subprocess.Popen(command, stdout=subprocess.PIPE).stdout.read()  # command output is from oc stdout
+		# `oc $CMD -h` outputs via stdout, but `oc options` outputs via stderr
+		outputTuple = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate()
+		output = outputTuple[0] + outputTuple[1]
+		return output
 	
 	def get_command_title(self,outputStr):
 		commandList = []
@@ -51,10 +49,10 @@ class Handler():
 		commands = []
 		if "ptions:" in pageStr:	## FILTER FLAGS
 			flagStr = pageStr.split("ptions:\n")[1].split('\n\n')[0]
-			flagLines = re.split("\n",flagStr)
-			for line in flagLines:
-				flags.append(line.split(':')[0])
+			flags = re.findall(r"(^ +-.+?):", flagStr, re.MULTILINE)
 			self.append_log(list=flags, title=self.o +' '+ ocCmd)
+		else: # no flags, e.g v3.8 oc adm cordon -h
+			self.append_log(list=[], title=self.o +' '+ ocCmd)
 
 		for sub in self.subGroups:	## FILTER SUB COMMANDS
 			if sub in pageStr:
@@ -114,12 +112,8 @@ class Handler():
 			else: print printLog
 
 	def get_oc_option_list(self):
-		self.commandTitleStr = subprocess.Popen([self.o,'options'], stderr=subprocess.PIPE).stderr.read()
-		optionsParagraph = self.commandTitleStr.split('\n\n')[1]
-		optionL = []
-		lines =  optionsParagraph.split('\n')
-		for line in lines:
-			optionL.append(line.split(':')[0])
+		output = subprocess.Popen(self.o.split() + ['options'], stderr=subprocess.PIPE).stderr.read()
+		optionL = re.findall(r"(^ +-.+?):", output, re.MULTILINE)
 		return optionL
 
 class oc(Handler):
@@ -144,12 +138,12 @@ if __name__ == '__main__':
 	test=oc()
 
 	# >>>>>>>>>>>>>> to see if it's oc or oadm command
-	if "oc" in sys.argv:
+	args = ' '.join(sys.argv)
+	if "oc" in sys.argv and "adm" not in sys.argv:
 		test.o = "oc"
-		sys.argv.remove("oc")
-	if "oadm" in sys.argv:
-		test.o = "oadm"
-		sys.argv.remove("oadm")   	
+	if "oc" in sys.argv and "adm" in sys.argv:
+		test.o = "oc adm"
+
 
 	# >>>>>>>>>>>>>> to see if need to output a diff file and open a log file to write
 	test.diff = False
@@ -157,19 +151,13 @@ if __name__ == '__main__':
 		test.diff = True
 		sys.argv.remove("diff")
 
-	if len(sys.argv)<2: test.v=logTitle = raw_input("Please input a title for this version of result, suggest '3.2.0.x' :")
-	else: test.v=logTitle = sys.argv[1]
+	versionOutput = subprocess.Popen(['oc', 'version'], stdout=subprocess.PIPE).stdout.read()
+	test.v = re.findall(r"oc (v.+)", versionOutput)[0]
 	headerList = test.call_command_title("") 
 
-	test.logName = test.o + "_" + test.v + "_cmds.txt"
+	test.logName = '_'.join(test.o.split()) + "_" + test.v + "_cmds.txt"
 	test.f=open(test.logName,'w')
 	test.insert_cmds_for_titles(headerList) 
-	
-	# >>>>>>>>>>>>>> write 'oc options'
-	ocOptionL = test.get_oc_option_list()
-	test.append_log(ocOptionL,'%s options'%test.o)
-	print '============== %s options =============='%test.o
-	print ocOptionL
 	
 	# >>>>>>>>>>>>>> for each top level oc command, write all sub-commands and flags
 	for oclist in test.ocLists:
@@ -179,6 +167,12 @@ if __name__ == '__main__':
 			outputStr = test.call(ocCmd)
 			flags = test.get_flags(outputStr, ocCmd)
 	
-	# >>>>>>>>>>>>>> save xls, log file, diff file
+	# >>>>>>>>>>>>>> write 'oc options'
+	ocOptionL = test.get_oc_option_list()
+	test.append_log(ocOptionL,'%s options'%test.o)
+	print '============== %s options =============='%test.o
+	print ocOptionL
+	
+	# >>>>>>>>>>>>>> save log file, diff file
 	test.f.close()
-	print "\n\n>>>>>>>>>>> Please check the *_cmds.txt file <<<<<<<<<<< "
+	print "\n\n>>>>>>>>>>> Please check the %s file <<<<<<<<<<< " % test.logName
