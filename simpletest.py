@@ -8,9 +8,9 @@ class Handler():
 
 	def call(self, *args):
 		if type(args[0]) == list:
-			command = self.o.split() + args[0] + ["-h"]
+			command = self.root_cmd + args[0] + ["-h"]
 		else:
-			command = self.o.split() + list(args) + ["-h"]
+			command = self.root_cmd + list(args) + ["-h"]
 		print command
 
 		# `oc $CMD -h` outputs via stdout, but `oc options` outputs via stderr
@@ -112,7 +112,7 @@ class Handler():
 			else: print printLog
 
 	def get_oc_option_list(self):
-		output = subprocess.Popen(self.o.split() + ['options'], stderr=subprocess.PIPE).stderr.read()
+		output = subprocess.Popen(self.root_cmd + ['options'], stderr=subprocess.PIPE).stderr.read()
 		optionL = re.findall(r"(^ +-.+?):", output, re.MULTILINE)
 		return optionL
 
@@ -139,10 +139,14 @@ if __name__ == '__main__':
 
 	# >>>>>>>>>>>>>> to see if it's oc or oadm command
 	args = ' '.join(sys.argv)
-	if "oc" in sys.argv and "adm" not in sys.argv:
+	if "oc" in args and "adm" not in args:
 		test.o = "oc"
-	if "oc" in sys.argv and "adm" in sys.argv:
+                test.root_cmd = [sys.argv[1]]
+	elif "oc" in args and "adm" in args:
 		test.o = "oc adm"
+                test.root_cmd = [sys.argv[1]] + ["adm"]
+        else:
+		print "Usage is wrong"
 
 
 	# >>>>>>>>>>>>>> to see if need to output a diff file and open a log file to write
