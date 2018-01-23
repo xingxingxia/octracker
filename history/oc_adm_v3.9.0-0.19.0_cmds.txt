@@ -1,0 +1,593 @@
+
+Component Installation
+router
+ipfailover
+registry
+
+Security and Policy
+new-project
+policy
+groups
+ca
+certificate
+
+Node Management
+create-node-config
+manage-node
+cordon
+uncordon
+drain
+taint
+pod-network
+
+Maintenance
+diagnostics
+prune
+build-chain
+migrate
+top
+verify-image-signature
+
+Configuration
+create-kubeconfig
+create-api-client-config
+create-bootstrap-project-template
+create-bootstrap-policy-file
+create-login-template
+create-provider-selection-template
+create-error-template
+
+Other Commands
+completion
+config
+================================
+
+oc adm router
+      --ciphers=''
+      --create=false
+      --default-cert=''
+      --disable-namespace-ownership-check=false
+      --dry-run=false
+      --expose-metrics=false
+      --external-host=''
+      --external-host-http-vserver=''
+      --external-host-https-vserver=''
+      --external-host-insecure=false
+      --external-host-internal-ip=''
+      --external-host-partition-path=''
+      --external-host-password=''
+      --external-host-private-key=''
+      --external-host-username=''
+      --external-host-vxlan-gw=''
+      --force-subdomain=''
+      --host-network=true
+      --host-ports=true
+      --images='registry.access.redhat.com/openshift3/ose-${component}
+      --labels='router=<name>'
+      --latest-images=false
+      --max-connections=''
+      --metrics-image=''
+  -o, --output=''
+      --output-version=''
+      --ports='80
+      --replicas=1
+      --router-canonical-hostname=''
+      --secrets-as-env=false
+      --selector=''
+      --service-account='router'
+  -a, --show-all=true
+      --show-labels=false
+      --sort-by=''
+      --stats-password=''
+      --stats-port=1936
+      --stats-user='admin'
+      --strict-sni=false
+      --subdomain=''
+      --template=''
+      --type='haproxy-router'
+
+oc adm ipfailover
+      --check-interval=2
+      --check-script=''
+      --create=false
+      --dry-run=false
+      --images='registry.access.redhat.com/openshift3/ose-${component}
+  -i, --interface=''
+      --iptables-chain='INPUT'
+      --latest-images=false
+      --notify-script=''
+  -o, --output=''
+      --output-version=''
+      --preemption-strategy='preempt_delay 300'
+  -r, --replicas=1
+  -l, --selector='ipfailover=<name>'
+      --service-account='ipfailover'
+  -a, --show-all=true
+      --show-labels=false
+      --sort-by=''
+      --template=''
+      --type='keepalived'
+      --virtual-ips=''
+      --vrrp-id-offset=0
+  -w, --watch-port=80
+
+oc adm registry
+      --create=false
+      --daemonset=false
+      --dry-run=false
+      --enforce-quota=false
+      --fs-group=''
+      --images='registry.access.redhat.com/openshift3/ose-${component}
+      --labels='docker-registry=default'
+      --latest-images=false
+      --mount-host=''
+  -o, --output=''
+      --output-version=''
+      --ports='5000'
+      --replicas=1
+      --selector=''
+      --service-account='registry'
+  -a, --show-all=true
+      --show-labels=false
+      --sort-by=''
+      --supplemental-groups=[]
+      --template=''
+      --tls-certificate=''
+      --tls-key=''
+      --type='docker-registry'
+      --volume='/registry'
+
+oc adm new-project
+      --admin=''
+      --admin-role='admin'
+      --description=''
+      --display-name=''
+      --node-selector=''
+
+oc adm policy
+
+oc adm groups
+
+oc adm groups add-users
+
+oc adm groups new
+      --allow-missing-template-keys=true
+      --no-headers=false
+  -o, --output=''
+  -a, --show-all=true
+      --show-labels=false
+      --sort-by=''
+      --template=''
+
+oc adm groups prune
+      --blacklist=''
+      --confirm=false
+      --sync-config=''
+      --whitelist=''
+
+oc adm groups remove-users
+
+oc adm groups sync
+      --allow-missing-template-keys=true
+      --blacklist=''
+      --confirm=false
+      --no-headers=false
+  -o, --output='yaml'
+  -a, --show-all=true
+      --show-labels=false
+      --sort-by=''
+      --sync-config=''
+      --template=''
+      --type='ldap'
+      --whitelist=''
+
+oc adm ca
+
+oc adm ca create-key-pair
+      --overwrite=false
+      --private-key=''
+      --public-key=''
+
+oc adm ca create-master-certs
+      --cert-dir='openshift.local.config/master'
+      --certificate-authority=[]
+      --expire-days=730
+      --hostnames=[]
+      --master='https
+      --overwrite=false
+      --public-master=''
+      --signer-expire-days=1825
+      --signer-name='openshift-signer@1516068835'
+
+oc adm ca create-server-cert
+      --cert=''
+      --expire-days=730
+      --hostnames=[]
+      --key=''
+      --overwrite=true
+      --signer-cert='openshift.local.config/master/ca.crt'
+      --signer-key='openshift.local.config/master/ca.key'
+      --signer-serial='openshift.local.config/master/ca.serial.txt'
+
+oc adm ca create-signer-cert
+      --cert='openshift.local.config/master/ca.crt'
+      --expire-days=1825
+      --key='openshift.local.config/master/ca.key'
+      --name='openshift-signer@1516068835'
+      --overwrite=true
+      --serial='openshift.local.config/master/ca.serial.txt'
+
+oc adm ca decrypt
+      --in=''
+      --key=''
+      --out=''
+
+oc adm ca encrypt
+      --genkey=''
+      --in=''
+      --key=''
+      --out=''
+
+oc adm certificate
+
+oc adm certificate approve
+  -f, --filename=[]
+  -o, --output=''
+  -R, --recursive=false
+
+oc adm certificate deny
+  -f, --filename=[]
+  -o, --output=''
+  -R, --recursive=false
+
+oc adm create-node-config
+      --allow-disabled-docker=false
+      --certificate-authority=[openshift.local.config/master/ca.crt]
+      --client-certificate=''
+      --client-key=''
+      --dns-bind-address=''
+      --dns-domain='cluster.local'
+      --dns-ip=''
+      --expire-days=730
+      --hostnames=[]
+      --images='registry.access.redhat.com/openshift3/ose-${component}
+      --latest-images=false
+      --listen='https
+      --master='https
+      --network-plugin=''
+      --node=''
+      --node-client-certificate-authority='openshift.local.config/master/ca.crt'
+      --node-dir=''
+      --server-certificate=''
+      --server-key=''
+      --signer-cert='openshift.local.config/master/ca.crt'
+      --signer-key='openshift.local.config/master/ca.key'
+      --signer-serial='openshift.local.config/master/ca.serial.txt'
+      --volume-dir='openshift.local.volumes'
+
+oc adm manage-node
+      --allow-missing-template-keys=true
+      --dry-run=false
+      --evacuate=false
+      --force=false
+      --grace-period=30
+      --list-pods=false
+      --no-headers=false
+  -o, --output=''
+      --pod-selector=''
+      --schedulable=false
+      --selector=''
+  -a, --show-all=true
+      --show-labels=false
+      --sort-by=''
+      --template=''
+
+oc adm cordon
+      --dry-run=false
+  -l, --selector=''
+
+oc adm uncordon
+      --dry-run=false
+  -l, --selector=''
+
+oc adm drain
+      --delete-local-data=false
+      --dry-run=false
+      --force=false
+      --grace-period=-1
+      --ignore-daemonsets=false
+      --pod-selector=''
+  -l, --selector=''
+      --timeout=0s
+
+oc adm taint
+      --all=false
+      --allow-missing-template-keys=true
+      --include-extended-apis=true
+      --no-headers=false
+  -o, --output=''
+      --overwrite=false
+  -l, --selector=''
+  -a, --show-all=true
+      --show-labels=false
+      --sort-by=''
+      --template=''
+      --validate=false
+
+oc adm pod-network
+
+oc adm pod-network isolate-projects
+      --selector=''
+
+oc adm pod-network join-projects
+      --selector=''
+      --to=''
+
+oc adm pod-network make-projects-global
+      --selector=''
+
+oc adm diagnostics
+      --cluster-context=''
+      --config=''
+      --context=''
+  -l, --diaglevel=1
+      --host=false
+      --images='registry.access.redhat.com/openshift3/ose-${component}
+      --latest-images=false
+      --loglevel=0
+      --logspec=''
+      --master-config=''
+      --network-logdir='/tmp/openshift/'
+      --network-pod-image='openshift3/ose
+      --network-test-pod-image='openshift3/ose-deployer
+      --network-test-pod-port=8080
+      --network-test-pod-protocol='TCP'
+      --node-config=''
+      --prevent-modification=false
+
+oc adm prune
+
+oc adm prune builds
+      --confirm=false
+      --keep-complete=5
+      --keep-failed=1
+      --keep-younger-than=1h0m0s
+      --orphans=false
+
+oc adm prune deployments
+      --confirm=false
+      --keep-complete=5
+      --keep-failed=1
+      --keep-younger-than=1h0m0s
+      --orphans=false
+
+oc adm prune groups
+      --blacklist=''
+      --confirm=false
+      --sync-config=''
+      --whitelist=''
+
+oc adm prune images
+      --all=true
+      --certificate-authority=''
+      --confirm=false
+      --force-insecure=false
+      --keep-tag-revisions=3
+      --keep-younger-than=1h0m0s
+      --prune-over-size-limit=false
+      --prune-registry=true
+      --registry-url=''
+
+oc adm build-chain
+      --all=false
+  -o, --output=''
+      --reverse=false
+      --trigger-only=true
+
+oc adm migrate
+
+oc adm migrate authorization
+      --all-namespaces=true
+      --allow-missing-template-keys=true
+      --confirm=false
+  -f, --filename=[]
+      --from-key=''
+      --include=[clusterroles.authorization.openshift.io,roles.authorization.openshift.io,clusterrolebindings.authorization.openshift.io,rolebindings.authorization.openshift.io]
+      --no-headers=false
+  -o, --output=''
+  -a, --show-all=true
+      --show-labels=false
+      --sort-by=''
+      --template=''
+      --to-key=''
+
+oc adm migrate etcd-ttl
+      --cacert=''
+      --cert=''
+      --etcd-address=''
+      --key=''
+      --lease-duration=0s
+      --ttl-keys-prefix=''
+
+oc adm migrate image-references
+      --all-namespaces=true
+      --allow-missing-template-keys=true
+      --confirm=false
+  -f, --filename=[]
+      --from-key=''
+      --include=[imagestream,image,secrets]
+      --no-headers=false
+  -o, --output=''
+  -a, --show-all=true
+      --show-labels=false
+      --sort-by=''
+      --template=''
+      --to-key=''
+
+oc adm migrate storage
+      --all-namespaces=true
+      --allow-missing-template-keys=true
+      --confirm=false
+  -f, --filename=[]
+      --from-key=''
+      --include=[*]
+      --no-headers=false
+  -o, --output=''
+  -a, --show-all=true
+      --show-labels=false
+      --sort-by=''
+      --template=''
+      --to-key=''
+
+oc adm top
+
+oc adm top images
+
+oc adm top imagestreams
+
+oc adm top node
+      --heapster-namespace='openshift-infra'
+      --heapster-port=''
+      --heapster-scheme='https'
+      --heapster-service='heapster'
+  -l, --selector=''
+
+oc adm top pod
+      --all-namespaces=false
+      --containers=false
+      --heapster-namespace='openshift-infra'
+      --heapster-port=''
+      --heapster-scheme='https'
+      --heapster-service='heapster'
+  -l, --selector=''
+
+oc adm verify-image-signature
+      --expected-identity=''
+      --insecure=false
+      --public-key='pubring.gpg'
+      --registry-url=''
+      --remove-all=false
+      --save=false
+
+oc adm create-kubeconfig
+      --certificate-authority=[openshift.local.config/master/ca.crt]
+      --client-certificate=''
+      --client-key=''
+      --kubeconfig='.kubeconfig'
+      --master='https
+      --namespace='default'
+      --public-master=''
+
+oc adm create-api-client-config
+      --basename=''
+      --certificate-authority=[openshift.local.config/master/ca.crt]
+      --client-dir=''
+      --expire-days=730
+      --groups=[]
+      --master='https
+      --public-master=''
+      --signer-cert='openshift.local.config/master/ca.crt'
+      --signer-key='openshift.local.config/master/ca.key'
+      --signer-serial='openshift.local.config/master/ca.serial.txt'
+      --user=''
+
+oc adm create-bootstrap-project-template
+      --allow-missing-template-keys=true
+      --name='project-request'
+      --no-headers=false
+  -o, --output=''
+  -a, --show-all=true
+      --show-labels=false
+      --sort-by=''
+      --template=''
+
+oc adm create-bootstrap-policy-file
+      --filename='openshift.local.config/master/policy.json'
+      --openshift-namespace='openshift'
+
+oc adm create-login-template
+
+oc adm create-provider-selection-template
+
+oc adm create-error-template
+
+oc adm completion
+
+oc adm config
+
+oc adm config current-context
+
+oc adm config delete-cluster
+
+oc adm config delete-context
+
+oc adm config get-clusters
+
+oc adm config get-contexts
+      --allow-missing-template-keys=true
+      --no-headers=false
+  -o, --output=''
+
+oc adm config rename-context
+
+oc adm config set
+      --set-raw-bytes=false
+
+oc adm config set-cluster
+      --certificate-authority=''
+      --embed-certs=false
+      --insecure-skip-tls-verify=false
+      --server=''
+
+oc adm config set-context
+      --cluster=''
+      --namespace=''
+      --user=''
+
+oc adm config set-credentials
+      --auth-provider=''
+      --auth-provider-arg=[]
+      --client-certificate=''
+      --client-key=''
+      --embed-certs=false
+      --password=''
+      --token=''
+      --username=''
+
+oc adm config unset
+
+oc adm config use-context
+
+oc adm config view
+      --allow-missing-template-keys=true
+      --flatten=false
+      --merge=true
+      --minify=false
+      --no-headers=false
+  -o, --output=''
+      --raw=false
+  -a, --show-all=true
+      --show-labels=false
+      --sort-by=''
+      --template=''
+
+oc adm options
+      --as=''
+      --as-group=[]
+      --cache-dir='/home/xxia/.kube/http-cache'
+      --certificate-authority=''
+      --client-certificate=''
+      --client-key=''
+      --cluster=''
+      --config=''
+      --context=''
+      --insecure-skip-tls-verify=false
+      --log-flush-frequency=5s
+      --loglevel=0
+      --logspec=''
+      --match-server-version=false
+  -n, --namespace=''
+      --request-timeout='0'
+      --server=''
+      --token=''
+      --user=''
