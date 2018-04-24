@@ -65,6 +65,7 @@ oc adm router
       --images='registry.access.redhat.com/openshift3/ose-${component}
       --labels='router=<name>'
       --latest-images=false
+      --local=false
       --max-connections=''
       --metrics-image=''
   -o, --output=''
@@ -120,6 +121,7 @@ oc adm registry
       --images='registry.access.redhat.com/openshift3/ose-${component}
       --labels='docker-registry=default'
       --latest-images=false
+      --local=false
       --mount-host=''
   -o, --output=''
       --output-version=''
@@ -197,7 +199,7 @@ oc adm ca create-master-certs
       --overwrite=false
       --public-master=''
       --signer-expire-days=1825
-      --signer-name='openshift-signer@1517278028'
+      --signer-name='openshift-signer@1521511536'
 
 oc adm ca create-server-cert
       --cert=''
@@ -213,7 +215,7 @@ oc adm ca create-signer-cert
       --cert='openshift.local.config/master/ca.crt'
       --expire-days=1825
       --key='openshift.local.config/master/ca.key'
-      --name='openshift-signer@1517278028'
+      --name='openshift-signer@1521511536'
       --overwrite=true
       --serial='openshift.local.config/master/ca.serial.txt'
 
@@ -343,11 +345,31 @@ oc adm diagnostics aggregatedlogging
       --config=''
       --context=''
   -l, --diaglevel=1
+      --logging-project=''
       --loglevel=0
       --logspec=''
       --prevent-modification=false
 
 oc adm diagnostics all
+      --aggregatedlogging-logging-project=''
+      --appcreate-admission-timeout=10
+      --appcreate-app-image='registry.access.redhat.com/openshift3/ose-deployer
+      --appcreate-app-name='diagnostic-appcreate'
+      --appcreate-app-port=8080
+      --appcreate-deploy-timeout=120
+      --appcreate-http-retries=10
+      --appcreate-http-timeout=500
+      --appcreate-keep-app=false
+      --appcreate-keep-project=false
+      --appcreate-node-selector=''
+      --appcreate-project=''
+      --appcreate-project-base='openshift-diagnostic-appcreate-'
+      --appcreate-result-dir=''
+      --appcreate-route-host=''
+      --appcreate-route-port=80
+      --appcreate-skip-route-connect=false
+      --appcreate-skip-route-test=false
+      --appcreate-skip-service-connect=false
       --cluster-context=''
       --config=''
       --context=''
@@ -374,6 +396,33 @@ oc adm diagnostics analyzelogs
       --logspec=''
       --master-config=''
       --node-config=''
+
+oc adm diagnostics appcreate
+      --admission-timeout=10
+      --app-image='registry.access.redhat.com/openshift3/ose-deployer
+      --app-name='diagnostic-appcreate'
+      --app-port=8080
+      --cluster-context=''
+      --config=''
+      --context=''
+      --deploy-timeout=120
+  -l, --diaglevel=1
+      --http-retries=10
+      --http-timeout=500
+      --keep-app=false
+      --keep-project=false
+      --loglevel=0
+      --logspec=''
+      --node-selector=''
+      --prevent-modification=false
+      --project=''
+      --project-base='openshift-diagnostic-appcreate-'
+      --result-dir=''
+      --route-host=''
+      --route-port=80
+      --skip-route-connect=false
+      --skip-route-test=false
+      --skip-service-connect=false
 
 oc adm diagnostics clusterregistry
       --cluster-context=''
@@ -587,6 +636,21 @@ oc adm migrate image-references
   -f, --filename=[]
       --from-key=''
       --include=[imagestream,image,secrets]
+      --no-headers=false
+  -o, --output=''
+  -a, --show-all=true
+      --show-labels=false
+      --sort-by=''
+      --template=''
+      --to-key=''
+
+oc adm migrate legacy-hpa
+      --all-namespaces=true
+      --allow-missing-template-keys=true
+      --confirm=false
+  -f, --filename=[]
+      --from-key=''
+      --include=[horizontalpodautoscalers.autoscaling]
       --no-headers=false
   -o, --output=''
   -a, --show-all=true

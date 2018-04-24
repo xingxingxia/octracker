@@ -243,12 +243,17 @@ oc rollout undo
       --to-revision=0
 
 oc rollback
+      --allow-missing-template-keys=true
       --change-scaling-settings=false
       --change-strategy=false
       --change-triggers=false
   -d, --dry-run=false
+      --no-headers=false
   -o, --output=''
-  -t, --template=''
+  -a, --show-all=true
+      --show-labels=false
+      --sort-by=''
+      --template=''
       --to-version=0
 
 oc new-build
@@ -271,6 +276,7 @@ oc new-build
       --no-output=false
   -o, --output=''
       --output-version=''
+      --push-secret=''
   -a, --show-all=true
       --show-labels=false
       --sort-by=''
@@ -328,8 +334,9 @@ oc tag
 oc get
       --all-namespaces=false
       --allow-missing-template-keys=true
-      --experimental-use-openapi-print-columns=false
+      --chunk-size=500
       --export=false
+      --field-selector=''
   -f, --filename=[]
       --ignore-not-found=false
       --include-extended-apis=true
@@ -345,6 +352,7 @@ oc get
       --show-labels=false
       --sort-by=''
       --template=''
+      --use-openapi-print-columns=true
   -w, --watch=false
       --watch-only=false
 
@@ -361,13 +369,11 @@ oc edit
   -f, --filename=[]
       --include-extended-apis=true
       --include-uninitialized=false
-      --openapi-validation=true
   -o, --output='yaml'
       --output-patch=false
       --record=false
   -R, --recursive=false
       --save-config=false
-      --schema-cache-dir='~/.kube/schema'
       --validate=false
       --windows-line-endings=false
 
@@ -580,6 +586,7 @@ oc label
   -f, --filename=[]
       --include-extended-apis=true
       --include-uninitialized=false
+      --list=false
       --local=false
       --no-headers=false
   -o, --output=''
@@ -660,6 +667,7 @@ oc delete
       --timeout=0s
 
 oc scale
+      --all=false
       --current-replicas=-1
   -f, --filename=[]
       --include-extended-apis=true
@@ -668,6 +676,7 @@ oc scale
   -R, --recursive=false
       --replicas=-1
       --resource-version=''
+  -l, --selector=''
       --timeout=0s
 
 oc autoscale
@@ -892,12 +901,11 @@ oc create
   -f, --filename=[]
       --include-extended-apis=true
       --no-headers=false
-      --openapi-validation=true
   -o, --output=''
+      --raw=''
       --record=false
   -R, --recursive=false
       --save-config=false
-      --schema-cache-dir='~/.kube/schema'
   -l, --selector=''
   -a, --show-all=true
       --show-labels=false
@@ -924,12 +932,10 @@ oc create clusterrole
       --dry-run=false
       --no-headers=false
       --non-resource-url=[]
-      --openapi-validation=true
   -o, --output=''
       --resource=[]
       --resource-name=[]
       --save-config=false
-      --schema-cache-dir='~/.kube/schema'
   -a, --show-all=true
       --show-labels=false
       --sort-by=''
@@ -944,10 +950,8 @@ oc create clusterrolebinding
       --generator='clusterrolebinding.rbac.authorization.k8s.io/v1alpha1'
       --group=[]
       --no-headers=false
-      --openapi-validation=true
   -o, --output=''
       --save-config=false
-      --schema-cache-dir='~/.kube/schema'
       --serviceaccount=[]
   -a, --show-all=true
       --show-labels=false
@@ -965,10 +969,8 @@ oc create configmap
       --from-literal=[]
       --generator='configmap/v1'
       --no-headers=false
-      --openapi-validation=true
   -o, --output=''
       --save-config=false
-      --schema-cache-dir='~/.kube/schema'
   -a, --show-all=true
       --show-labels=false
       --sort-by=''
@@ -981,10 +983,8 @@ oc create deployment
       --generator='deployment-basic/v1beta1'
       --image=[]
       --no-headers=false
-      --openapi-validation=true
   -o, --output=''
       --save-config=false
-      --schema-cache-dir='~/.kube/schema'
   -a, --show-all=true
       --show-labels=false
       --sort-by=''
@@ -1045,10 +1045,8 @@ oc create namespace
       --dry-run=false
       --generator='namespace/v1'
       --no-headers=false
-      --openapi-validation=true
   -o, --output=''
       --save-config=false
-      --schema-cache-dir='~/.kube/schema'
   -a, --show-all=true
       --show-labels=false
       --sort-by=''
@@ -1062,10 +1060,8 @@ oc create poddisruptionbudget
       --max-unavailable=''
       --min-available=''
       --no-headers=false
-      --openapi-validation=true
   -o, --output=''
       --save-config=false
-      --schema-cache-dir='~/.kube/schema'
       --selector=''
   -a, --show-all=true
       --show-labels=false
@@ -1076,16 +1072,30 @@ oc create poddisruptionbudget
 oc create policybinding
   -o, --output=''
 
+oc create priorityclass
+      --allow-missing-template-keys=true
+      --description=''
+      --dry-run=false
+      --generator='priorityclass/v1alpha1'
+      --global-default=false
+      --no-headers=false
+  -o, --output=''
+      --save-config=false
+  -a, --show-all=true
+      --show-labels=false
+      --sort-by=''
+      --template=''
+      --validate=false
+      --value=0
+
 oc create quota
       --allow-missing-template-keys=true
       --dry-run=false
       --generator='resourcequotas/v1'
       --hard=''
       --no-headers=false
-      --openapi-validation=true
   -o, --output=''
       --save-config=false
-      --schema-cache-dir='~/.kube/schema'
       --scopes=''
   -a, --show-all=true
       --show-labels=false
@@ -1097,12 +1107,10 @@ oc create role
       --allow-missing-template-keys=true
       --dry-run=false
       --no-headers=false
-      --openapi-validation=true
   -o, --output=''
       --resource=[]
       --resource-name=[]
       --save-config=false
-      --schema-cache-dir='~/.kube/schema'
   -a, --show-all=true
       --show-labels=false
       --sort-by=''
@@ -1117,11 +1125,9 @@ oc create rolebinding
       --generator='rolebinding.rbac.authorization.k8s.io/v1alpha1'
       --group=[]
       --no-headers=false
-      --openapi-validation=true
   -o, --output=''
       --role=''
       --save-config=false
-      --schema-cache-dir='~/.kube/schema'
       --serviceaccount=[]
   -a, --show-all=true
       --show-labels=false
@@ -1141,11 +1147,9 @@ oc create route edge
       --insecure-policy=''
       --key=''
       --no-headers=false
-      --openapi-validation=true
   -o, --output=''
       --path=''
       --port=''
-      --schema-cache-dir='~/.kube/schema'
       --service=''
   -a, --show-all=true
       --show-labels=false
@@ -1160,10 +1164,8 @@ oc create route passthrough
       --hostname=''
       --insecure-policy=''
       --no-headers=false
-      --openapi-validation=true
   -o, --output=''
       --port=''
-      --schema-cache-dir='~/.kube/schema'
       --service=''
   -a, --show-all=true
       --show-labels=false
@@ -1182,11 +1184,9 @@ oc create route reencrypt
       --insecure-policy=''
       --key=''
       --no-headers=false
-      --openapi-validation=true
   -o, --output=''
       --path=''
       --port=''
-      --schema-cache-dir='~/.kube/schema'
       --service=''
   -a, --show-all=true
       --show-labels=false
@@ -1208,10 +1208,8 @@ oc create secret docker-registry
       --generator='secret-for-docker-registry/v1'
       --include-extended-apis=true
       --no-headers=false
-      --openapi-validation=true
   -o, --output=''
       --save-config=false
-      --schema-cache-dir='~/.kube/schema'
   -a, --show-all=true
       --show-labels=false
       --sort-by=''
@@ -1227,10 +1225,8 @@ oc create secret generic
       --from-literal=[]
       --generator='secret/v1'
       --no-headers=false
-      --openapi-validation=true
   -o, --output=''
       --save-config=false
-      --schema-cache-dir='~/.kube/schema'
   -a, --show-all=true
       --show-labels=false
       --sort-by=''
@@ -1246,10 +1242,8 @@ oc create secret tls
       --generator='secret-for-tls/v1'
       --key=''
       --no-headers=false
-      --openapi-validation=true
   -o, --output=''
       --save-config=false
-      --schema-cache-dir='~/.kube/schema'
   -a, --show-all=true
       --show-labels=false
       --sort-by=''
@@ -1264,10 +1258,8 @@ oc create service clusterip
       --dry-run=false
       --generator='service-clusterip/v1'
       --no-headers=false
-      --openapi-validation=true
   -o, --output=''
       --save-config=false
-      --schema-cache-dir='~/.kube/schema'
   -a, --show-all=true
       --show-labels=false
       --sort-by=''
@@ -1281,10 +1273,8 @@ oc create service externalname
       --external-name=''
       --generator='service-externalname/v1'
       --no-headers=false
-      --openapi-validation=true
   -o, --output=''
       --save-config=false
-      --schema-cache-dir='~/.kube/schema'
   -a, --show-all=true
       --show-labels=false
       --sort-by=''
@@ -1297,10 +1287,8 @@ oc create service loadbalancer
       --dry-run=false
       --generator='service-loadbalancer/v1'
       --no-headers=false
-      --openapi-validation=true
   -o, --output=''
       --save-config=false
-      --schema-cache-dir='~/.kube/schema'
   -a, --show-all=true
       --show-labels=false
       --sort-by=''
@@ -1314,10 +1302,8 @@ oc create service nodeport
       --generator='service-nodeport/v1'
       --no-headers=false
       --node-port=0
-      --openapi-validation=true
   -o, --output=''
       --save-config=false
-      --schema-cache-dir='~/.kube/schema'
   -a, --show-all=true
       --show-labels=false
       --sort-by=''
@@ -1331,10 +1317,8 @@ oc create serviceaccount
       --generator='serviceaccount/v1'
       --include-extended-apis=true
       --no-headers=false
-      --openapi-validation=true
   -o, --output=''
       --save-config=false
-      --schema-cache-dir='~/.kube/schema'
   -a, --show-all=true
       --show-labels=false
       --sort-by=''
@@ -1368,12 +1352,10 @@ oc replace
       --force=false
       --grace-period=-1
       --include-extended-apis=true
-      --openapi-validation=true
   -o, --output=''
       --record=false
   -R, --recursive=false
       --save-config=false
-      --schema-cache-dir='~/.kube/schema'
       --timeout=0s
       --validate=false
 
@@ -1388,14 +1370,13 @@ oc apply
       --include-extended-apis=true
       --include-uninitialized=false
       --no-headers=false
-      --openapi-validation=true
+      --openapi-patch=true
   -o, --output=''
       --overwrite=true
       --prune=false
       --prune-whitelist=[]
       --record=false
   -R, --recursive=false
-      --schema-cache-dir='~/.kube/schema'
   -l, --selector=''
   -a, --show-all=true
       --show-labels=false
@@ -1459,6 +1440,8 @@ oc process
       --param-file=[]
       --parameters=false
       --raw=false
+  -a, --show-all=true
+      --show-labels=false
   -t, --template=''
 
 oc export
@@ -1570,6 +1553,7 @@ oc policy remove-role-from-group
       --no-headers=false
   -o, --output=''
       --role-namespace=''
+      --rolebinding-name=''
   -a, --show-all=true
       --show-labels=false
       --sort-by=''
@@ -1581,6 +1565,7 @@ oc policy remove-role-from-user
       --no-headers=false
   -o, --output=''
       --role-namespace=''
+      --rolebinding-name=''
   -z, --serviceaccount=[]
   -a, --show-all=true
       --show-labels=false
@@ -1657,11 +1642,9 @@ oc convert
       --include-extended-apis=true
       --local=true
       --no-headers=false
-      --openapi-validation=true
   -o, --output=''
       --output-version=''
   -R, --recursive=false
-      --schema-cache-dir='~/.kube/schema'
   -a, --show-all=true
       --show-labels=false
       --sort-by=''
@@ -1763,7 +1746,14 @@ oc ex build-chain
 oc ex config
 
 oc ex config patch
+      --allow-missing-template-keys=true
+      --no-headers=false
+  -o, --output=''
   -p, --patch=''
+  -a, --show-all=false
+      --show-labels=false
+      --sort-by=''
+      --template=''
       --type='strategic'
 
 oc ex diagnostics
@@ -1772,29 +1762,255 @@ oc ex diagnostics
       --context=''
   -l, --diaglevel=1
       --host=false
+      --loglevel=0
+      --logspec=''
+      --master-config=''
+      --node-config=''
+      --prevent-modification=false
+
+oc ex diagnostics aggregatedlogging
+      --cluster-context=''
+      --config=''
+      --context=''
+  -l, --diaglevel=1
+      --logging-project=''
+      --loglevel=0
+      --logspec=''
+      --prevent-modification=false
+
+oc ex diagnostics all
+      --aggregatedlogging-logging-project=''
+      --appcreate-admission-timeout=10
+      --appcreate-app-image='registry.access.redhat.com/openshift3/ose-deployer
+      --appcreate-app-name='diagnostic-appcreate'
+      --appcreate-app-port=8080
+      --appcreate-deploy-timeout=120
+      --appcreate-http-retries=10
+      --appcreate-http-timeout=500
+      --appcreate-keep-app=false
+      --appcreate-keep-project=false
+      --appcreate-node-selector=''
+      --appcreate-project=''
+      --appcreate-project-base='openshift-diagnostic-appcreate-'
+      --appcreate-result-dir=''
+      --appcreate-route-host=''
+      --appcreate-route-port=80
+      --appcreate-skip-route-connect=false
+      --appcreate-skip-route-test=false
+      --appcreate-skip-service-connect=false
+      --cluster-context=''
+      --config=''
+      --context=''
+  -l, --diaglevel=1
+      --diagnosticpod-images='registry.access.redhat.com/openshift3/ose-${component}
+      --diagnosticpod-latest-images=false
+      --etcdwritevolume-duration='1m'
+      --host=false
+      --loglevel=0
+      --logspec=''
+      --master-config=''
+      --networkcheck-logdir='/tmp/openshift/'
+      --networkcheck-pod-image='openshift3/ose
+      --networkcheck-test-pod-image='openshift3/ose-deployer
+      --networkcheck-test-pod-port=8080
+      --networkcheck-test-pod-protocol='TCP'
+      --node-config=''
+      --prevent-modification=false
+
+oc ex diagnostics analyzelogs
+  -l, --diaglevel=1
+      --host=false
+      --loglevel=0
+      --logspec=''
+      --master-config=''
+      --node-config=''
+
+oc ex diagnostics appcreate
+      --admission-timeout=10
+      --app-image='registry.access.redhat.com/openshift3/ose-deployer
+      --app-name='diagnostic-appcreate'
+      --app-port=8080
+      --cluster-context=''
+      --config=''
+      --context=''
+      --deploy-timeout=120
+  -l, --diaglevel=1
+      --http-retries=10
+      --http-timeout=500
+      --keep-app=false
+      --keep-project=false
+      --loglevel=0
+      --logspec=''
+      --node-selector=''
+      --prevent-modification=false
+      --project=''
+      --project-base='openshift-diagnostic-appcreate-'
+      --result-dir=''
+      --route-host=''
+      --route-port=80
+      --skip-route-connect=false
+      --skip-route-test=false
+      --skip-service-connect=false
+
+oc ex diagnostics clusterregistry
+      --cluster-context=''
+      --config=''
+      --context=''
+  -l, --diaglevel=1
+      --loglevel=0
+      --logspec=''
+      --prevent-modification=false
+
+oc ex diagnostics clusterrolebindings
+      --cluster-context=''
+      --config=''
+      --context=''
+  -l, --diaglevel=1
+      --loglevel=0
+      --logspec=''
+      --prevent-modification=false
+
+oc ex diagnostics clusterroles
+      --cluster-context=''
+      --config=''
+      --context=''
+  -l, --diaglevel=1
+      --loglevel=0
+      --logspec=''
+      --prevent-modification=false
+
+oc ex diagnostics clusterrouter
+      --cluster-context=''
+      --config=''
+      --context=''
+  -l, --diaglevel=1
+      --loglevel=0
+      --logspec=''
+      --prevent-modification=false
+
+oc ex diagnostics configcontexts
+      --cluster-context=''
+      --config=''
+      --context=''
+  -l, --diaglevel=1
+      --loglevel=0
+      --logspec=''
+      --prevent-modification=false
+
+oc ex diagnostics diagnosticpod
+      --cluster-context=''
+      --config=''
+      --context=''
+  -l, --diaglevel=1
       --images='registry.access.redhat.com/openshift3/ose-${component}
       --latest-images=false
       --loglevel=0
       --logspec=''
+      --prevent-modification=false
+
+oc ex diagnostics etcdwritevolume
+  -l, --diaglevel=1
+      --duration='1m'
+      --host=false
+      --loglevel=0
+      --logspec=''
       --master-config=''
-      --network-logdir='/tmp/openshift/'
-      --network-pod-image='registry.access.redhat.com/openshift3/ose
-      --network-test-pod-image='registry.access.redhat.com/openshift3/ose-deployer
-      --network-test-pod-port=8080
-      --network-test-pod-protocol='TCP'
+      --node-config=''
+
+oc ex diagnostics masterconfigcheck
+  -l, --diaglevel=1
+      --host=false
+      --loglevel=0
+      --logspec=''
+      --master-config=''
+      --node-config=''
+
+oc ex diagnostics masternode
+      --cluster-context=''
+      --config=''
+      --context=''
+  -l, --diaglevel=1
+      --host=false
+      --loglevel=0
+      --logspec=''
+      --master-config=''
       --node-config=''
       --prevent-modification=false
+
+oc ex diagnostics metricsapiproxy
+      --cluster-context=''
+      --config=''
+      --context=''
+  -l, --diaglevel=1
+      --loglevel=0
+      --logspec=''
+      --prevent-modification=false
+
+oc ex diagnostics networkcheck
+      --cluster-context=''
+      --config=''
+      --context=''
+  -l, --diaglevel=1
+      --logdir='/tmp/openshift/'
+      --loglevel=0
+      --logspec=''
+      --pod-image='openshift3/ose
+      --prevent-modification=false
+      --test-pod-image='openshift3/ose-deployer
+      --test-pod-port=8080
+      --test-pod-protocol='TCP'
+
+oc ex diagnostics nodeconfigcheck
+  -l, --diaglevel=1
+      --host=false
+      --loglevel=0
+      --logspec=''
+      --master-config=''
+      --node-config=''
+
+oc ex diagnostics nodedefinitions
+      --cluster-context=''
+      --config=''
+      --context=''
+  -l, --diaglevel=1
+      --loglevel=0
+      --logspec=''
+      --prevent-modification=false
+
+oc ex diagnostics routecertificatevalidation
+      --cluster-context=''
+      --config=''
+      --context=''
+  -l, --diaglevel=1
+      --loglevel=0
+      --logspec=''
+      --prevent-modification=false
+
+oc ex diagnostics serviceexternalips
+      --cluster-context=''
+      --config=''
+      --context=''
+  -l, --diaglevel=1
+      --host=false
+      --loglevel=0
+      --logspec=''
+      --master-config=''
+      --node-config=''
+      --prevent-modification=false
+
+oc ex diagnostics unitstatus
+  -l, --diaglevel=1
+      --host=false
+      --loglevel=0
+      --logspec=''
+      --master-config=''
+      --node-config=''
 
 oc ex dockergc
       --dry-run=false
       --image-gc-high-threshold=80
       --image-gc-low-threshold=60
       --minimum-ttl-duration=1h0m0s
-  -o, --output=''
-  -a, --show-all=false
-      --show-labels=false
-      --sort-by=''
-      --template=''
 
 oc ex ipfailover
       --check-interval=2
@@ -1869,3 +2085,4 @@ oc options
       --server=''
       --token=''
       --user=''
+      --version=false

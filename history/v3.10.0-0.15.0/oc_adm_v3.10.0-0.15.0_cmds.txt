@@ -65,6 +65,7 @@ oc adm router
       --images='registry.access.redhat.com/openshift3/ose-${component}
       --labels='router=<name>'
       --latest-images=false
+      --local=false
       --max-connections=''
       --metrics-image=''
   -o, --output=''
@@ -112,6 +113,7 @@ oc adm ipfailover
   -w, --watch-port=80
 
 oc adm registry
+      --cluster-ip=''
       --create=false
       --daemonset=false
       --dry-run=false
@@ -120,6 +122,7 @@ oc adm registry
       --images='registry.access.redhat.com/openshift3/ose-${component}
       --labels='docker-registry=default'
       --latest-images=false
+      --local=false
       --mount-host=''
   -o, --output=''
       --output-version=''
@@ -197,7 +200,7 @@ oc adm ca create-master-certs
       --overwrite=false
       --public-master=''
       --signer-expire-days=1825
-      --signer-name='openshift-signer@1513652457'
+      --signer-name='openshift-signer@1522744463'
 
 oc adm ca create-server-cert
       --cert=''
@@ -213,7 +216,7 @@ oc adm ca create-signer-cert
       --cert='openshift.local.config/master/ca.crt'
       --expire-days=1825
       --key='openshift.local.config/master/ca.key'
-      --name='openshift-signer@1513652458'
+      --name='openshift-signer@1522744463'
       --overwrite=true
       --serial='openshift.local.config/master/ca.serial.txt'
 
@@ -283,14 +286,21 @@ oc adm manage-node
       --template=''
 
 oc adm cordon
+      --dry-run=false
+  -l, --selector=''
 
 oc adm uncordon
+      --dry-run=false
+  -l, --selector=''
 
 oc adm drain
       --delete-local-data=false
+      --dry-run=false
       --force=false
       --grace-period=-1
       --ignore-daemonsets=false
+      --pod-selector=''
+  -l, --selector=''
       --timeout=0s
 
 oc adm taint
@@ -298,10 +308,8 @@ oc adm taint
       --allow-missing-template-keys=true
       --include-extended-apis=true
       --no-headers=false
-      --openapi-validation=true
   -o, --output=''
       --overwrite=false
-      --schema-cache-dir='~/.kube/schema'
   -l, --selector=''
   -a, --show-all=true
       --show-labels=false
@@ -327,18 +335,270 @@ oc adm diagnostics
       --context=''
   -l, --diaglevel=1
       --host=false
+      --loglevel=0
+      --logspec=''
+      --master-config=''
+      --node-config=''
+      --prevent-modification=false
+      --v=0
+
+oc adm diagnostics aggregatedlogging
+      --cluster-context=''
+      --config=''
+      --context=''
+  -l, --diaglevel=1
+      --logging-project=''
+      --loglevel=0
+      --logspec=''
+      --prevent-modification=false
+      --v=0
+
+oc adm diagnostics all
+      --aggregatedlogging-logging-project=''
+      --appcreate-admission-timeout=10
+      --appcreate-app-image='registry.access.redhat.com/openshift3/ose-deployer
+      --appcreate-app-name='diagnostic-appcreate'
+      --appcreate-app-port=8080
+      --appcreate-deploy-timeout=120
+      --appcreate-http-retries=10
+      --appcreate-http-timeout=500
+      --appcreate-keep-app=false
+      --appcreate-keep-project=false
+      --appcreate-node-selector=''
+      --appcreate-project=''
+      --appcreate-project-base='openshift-diagnostic-appcreate-'
+      --appcreate-result-dir=''
+      --appcreate-route-host=''
+      --appcreate-route-port=80
+      --appcreate-skip-route-connect=false
+      --appcreate-skip-route-test=false
+      --appcreate-skip-service-connect=false
+      --cluster-context=''
+      --config=''
+      --context=''
+  -l, --diaglevel=1
+      --diagnosticpod-images='registry.access.redhat.com/openshift3/ose-${component}
+      --diagnosticpod-latest-images=false
+      --etcdwritevolume-duration='1m'
+      --host=false
+      --loglevel=0
+      --logspec=''
+      --master-config=''
+      --networkcheck-logdir='/tmp/openshift/'
+      --networkcheck-pod-image='openshift3/ose
+      --networkcheck-test-pod-image='openshift3/ose-deployer
+      --networkcheck-test-pod-port=8080
+      --networkcheck-test-pod-protocol='TCP'
+      --node-config=''
+      --prevent-modification=false
+      --v=0
+
+oc adm diagnostics analyzelogs
+  -l, --diaglevel=1
+      --host=false
+      --loglevel=0
+      --logspec=''
+      --master-config=''
+      --node-config=''
+      --v=0
+
+oc adm diagnostics appcreate
+      --admission-timeout=10
+      --app-image='registry.access.redhat.com/openshift3/ose-deployer
+      --app-name='diagnostic-appcreate'
+      --app-port=8080
+      --cluster-context=''
+      --config=''
+      --context=''
+      --deploy-timeout=120
+  -l, --diaglevel=1
+      --http-retries=10
+      --http-timeout=500
+      --keep-app=false
+      --keep-project=false
+      --loglevel=0
+      --logspec=''
+      --node-selector=''
+      --prevent-modification=false
+      --project=''
+      --project-base='openshift-diagnostic-appcreate-'
+      --result-dir=''
+      --route-host=''
+      --route-port=80
+      --skip-route-connect=false
+      --skip-route-test=false
+      --skip-service-connect=false
+      --v=0
+
+oc adm diagnostics clusterregistry
+      --cluster-context=''
+      --config=''
+      --context=''
+  -l, --diaglevel=1
+      --loglevel=0
+      --logspec=''
+      --prevent-modification=false
+      --v=0
+
+oc adm diagnostics clusterrolebindings
+      --cluster-context=''
+      --config=''
+      --context=''
+  -l, --diaglevel=1
+      --loglevel=0
+      --logspec=''
+      --prevent-modification=false
+      --v=0
+
+oc adm diagnostics clusterroles
+      --cluster-context=''
+      --config=''
+      --context=''
+  -l, --diaglevel=1
+      --loglevel=0
+      --logspec=''
+      --prevent-modification=false
+      --v=0
+
+oc adm diagnostics clusterrouter
+      --cluster-context=''
+      --config=''
+      --context=''
+  -l, --diaglevel=1
+      --loglevel=0
+      --logspec=''
+      --prevent-modification=false
+      --v=0
+
+oc adm diagnostics configcontexts
+      --cluster-context=''
+      --config=''
+      --context=''
+  -l, --diaglevel=1
+      --loglevel=0
+      --logspec=''
+      --prevent-modification=false
+      --v=0
+
+oc adm diagnostics diagnosticpod
+      --cluster-context=''
+      --config=''
+      --context=''
+  -l, --diaglevel=1
       --images='registry.access.redhat.com/openshift3/ose-${component}
       --latest-images=false
       --loglevel=0
       --logspec=''
+      --prevent-modification=false
+      --v=0
+
+oc adm diagnostics etcdwritevolume
+  -l, --diaglevel=1
+      --duration='1m'
+      --host=false
+      --loglevel=0
+      --logspec=''
       --master-config=''
-      --network-logdir='/tmp/openshift/'
-      --network-pod-image='registry.access.redhat.com/openshift3/ose
-      --network-test-pod-image='registry.access.redhat.com/openshift3/ose-deployer
-      --network-test-pod-port=8080
-      --network-test-pod-protocol='TCP'
+      --node-config=''
+      --v=0
+
+oc adm diagnostics masterconfigcheck
+  -l, --diaglevel=1
+      --host=false
+      --loglevel=0
+      --logspec=''
+      --master-config=''
+      --node-config=''
+      --v=0
+
+oc adm diagnostics masternode
+      --cluster-context=''
+      --config=''
+      --context=''
+  -l, --diaglevel=1
+      --host=false
+      --loglevel=0
+      --logspec=''
+      --master-config=''
       --node-config=''
       --prevent-modification=false
+      --v=0
+
+oc adm diagnostics metricsapiproxy
+      --cluster-context=''
+      --config=''
+      --context=''
+  -l, --diaglevel=1
+      --loglevel=0
+      --logspec=''
+      --prevent-modification=false
+      --v=0
+
+oc adm diagnostics networkcheck
+      --cluster-context=''
+      --config=''
+      --context=''
+  -l, --diaglevel=1
+      --logdir='/tmp/openshift/'
+      --loglevel=0
+      --logspec=''
+      --pod-image='openshift3/ose
+      --prevent-modification=false
+      --test-pod-image='openshift3/ose-deployer
+      --test-pod-port=8080
+      --test-pod-protocol='TCP'
+      --v=0
+
+oc adm diagnostics nodeconfigcheck
+  -l, --diaglevel=1
+      --host=false
+      --loglevel=0
+      --logspec=''
+      --master-config=''
+      --node-config=''
+      --v=0
+
+oc adm diagnostics nodedefinitions
+      --cluster-context=''
+      --config=''
+      --context=''
+  -l, --diaglevel=1
+      --loglevel=0
+      --logspec=''
+      --prevent-modification=false
+      --v=0
+
+oc adm diagnostics routecertificatevalidation
+      --cluster-context=''
+      --config=''
+      --context=''
+  -l, --diaglevel=1
+      --loglevel=0
+      --logspec=''
+      --prevent-modification=false
+      --v=0
+
+oc adm diagnostics serviceexternalips
+      --cluster-context=''
+      --config=''
+      --context=''
+  -l, --diaglevel=1
+      --host=false
+      --loglevel=0
+      --logspec=''
+      --master-config=''
+      --node-config=''
+      --prevent-modification=false
+      --v=0
+
+oc adm diagnostics unitstatus
+  -l, --diaglevel=1
+      --host=false
+      --loglevel=0
+      --logspec=''
+      --master-config=''
+      --node-config=''
+      --v=0
 
 oc adm prune
 
@@ -370,6 +630,7 @@ oc adm prune images
       --keep-tag-revisions=3
       --keep-younger-than=1h0m0s
       --prune-over-size-limit=false
+      --prune-registry=true
       --registry-url=''
 
 oc adm build-chain
@@ -392,22 +653,47 @@ oc adm migrate etcd-ttl
 
 oc adm migrate image-references
       --all-namespaces=true
+      --allow-missing-template-keys=true
       --confirm=false
   -f, --filename=[]
       --from-key=''
       --include=[imagestream,image,secrets]
       --no-headers=false
   -o, --output=''
+  -a, --show-all=true
+      --show-labels=false
+      --sort-by=''
+      --template=''
+      --to-key=''
+
+oc adm migrate legacy-hpa
+      --all-namespaces=true
+      --allow-missing-template-keys=true
+      --confirm=false
+  -f, --filename=[]
+      --from-key=''
+      --include=[horizontalpodautoscalers.autoscaling]
+      --no-headers=false
+  -o, --output=''
+  -a, --show-all=true
+      --show-labels=false
+      --sort-by=''
+      --template=''
       --to-key=''
 
 oc adm migrate storage
       --all-namespaces=true
+      --allow-missing-template-keys=true
       --confirm=false
   -f, --filename=[]
       --from-key=''
       --include=[*]
       --no-headers=false
   -o, --output=''
+  -a, --show-all=true
+      --show-labels=false
+      --sort-by=''
+      --template=''
       --to-key=''
 
 oc adm top
@@ -562,3 +848,5 @@ oc adm options
       --server=''
       --token=''
       --user=''
+      --v=0
+      --version=false

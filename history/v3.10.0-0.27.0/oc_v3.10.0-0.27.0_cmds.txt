@@ -1,4 +1,7 @@
 
+Usage
+oc
+
 Basic Commands
 types
 login
@@ -61,6 +64,7 @@ auth
 convert
 import
 image
+registry
 
 Settings Commands
 logout
@@ -78,8 +82,7 @@ version
 oc types
 
 oc login
-  -p, --password=''
-  -u, --username=''
+      --certificate-authority=''
       --insecure-skip-tls-verify=false
       --token=''
 
@@ -126,7 +129,7 @@ oc new-app
 oc status
       --all-namespaces=false
   -o, --output=''
-  -v, --verbose=false
+      --suggest=false
 
 oc project
   -q, --short=false
@@ -141,60 +144,28 @@ oc explain
 
 oc cluster
 
-oc cluster down
-      --docker-machine=''
-
-oc cluster join
-      --create-machine=false
-      --docker-machine=''
-  -e, --env=[]
-      --forward-ports=false
-      --host-config-dir='/var/lib/origin/openshift.local.config'
-      --host-data-dir=''
-      --host-pv-dir='/var/lib/origin/openshift.local.pv'
-      --host-volumes-dir='/var/lib/origin/openshift.local.volumes'
-      --http-proxy=''
-      --https-proxy=''
-      --image='registry.access.redhat.com/openshift3/ose'
-      --image-streams='rhel7'
-      --logging=false
-      --metrics=false
-      --no-proxy=[]
-      --public-hostname=''
-      --routing-suffix=''
-      --secret=''
+oc cluster add
+      --base-dir=''
+      --image='registry.access.redhat.com/openshift3/ose-${component}
       --server-loglevel=0
-      --service-catalog=false
-      --skip-registry-check=false
-      --use-existing-config=false
-      --version=''
+
+oc cluster down
 
 oc cluster status
-      --docker-machine=''
 
 oc cluster up
-      --create-machine=false
-      --docker-machine=''
-  -e, --env=[]
+      --base-dir=''
+      --enable=[*]
       --forward-ports=false
-      --host-config-dir='/var/lib/origin/openshift.local.config'
-      --host-data-dir=''
-      --host-pv-dir='/var/lib/origin/openshift.local.pv'
-      --host-volumes-dir='/var/lib/origin/openshift.local.volumes'
       --http-proxy=''
       --https-proxy=''
-      --image='registry.access.redhat.com/openshift3/ose'
-      --image-streams='rhel7'
-      --logging=false
-      --metrics=false
+      --image='registry.access.redhat.com/openshift3/ose-${component}
       --no-proxy=[]
       --public-hostname=''
       --routing-suffix=''
       --server-loglevel=0
-      --service-catalog=false
       --skip-registry-check=false
-      --use-existing-config=false
-      --version=''
+      --write-config=false
 
 oc rollout
 
@@ -276,6 +247,7 @@ oc new-build
       --no-output=false
   -o, --output=''
       --output-version=''
+      --push-secret=''
   -a, --show-all=true
       --show-labels=false
       --sort-by=''
@@ -334,6 +306,7 @@ oc get
       --all-namespaces=false
       --allow-missing-template-keys=true
       --chunk-size=500
+      --experimental-server-print=false
       --export=false
       --field-selector=''
   -f, --filename=[]
@@ -351,7 +324,7 @@ oc get
       --show-labels=false
       --sort-by=''
       --template=''
-      --use-openapi-print-columns=true
+      --use-openapi-print-columns=false
   -w, --watch=false
       --watch-only=false
 
@@ -724,13 +697,11 @@ oc secrets new-basicauth
       --gitconfig=''
       --no-headers=false
   -o, --output=''
-      --password=''
       --prompt=false
   -a, --show-all=true
       --show-labels=false
       --sort-by=''
       --template=''
-      --username=''
 
 oc secrets new-dockercfg
       --allow-missing-template-keys=true
@@ -783,7 +754,6 @@ oc logs
       --since-time=''
       --tail=-1
       --timestamps=false
-      --version=0
 
 oc rsh
   -c, --container=''
@@ -804,7 +774,7 @@ oc rsync
   -w, --watch=false
 
 oc port-forward
-  -p, --pod=''
+      --pod-running-timeout=1m0s
 
 oc debug
       --as-root=false
@@ -956,7 +926,6 @@ oc create clusterrolebinding
       --show-labels=false
       --sort-by=''
       --template=''
-      --user=[]
       --validate=false
 
 oc create configmap
@@ -1039,6 +1008,18 @@ oc create imagestreamtag
       --sort-by=''
       --template=''
 
+oc create job
+      --allow-missing-template-keys=true
+      --from=''
+      --no-headers=false
+  -o, --output=''
+      --save-config=false
+  -a, --show-all=true
+      --show-labels=false
+      --sort-by=''
+      --template=''
+      --validate=false
+
 oc create namespace
       --allow-missing-template-keys=true
       --dry-run=false
@@ -1067,9 +1048,6 @@ oc create poddisruptionbudget
       --sort-by=''
       --template=''
       --validate=false
-
-oc create policybinding
-  -o, --output=''
 
 oc create priorityclass
       --allow-missing-template-keys=true
@@ -1132,7 +1110,6 @@ oc create rolebinding
       --show-labels=false
       --sort-by=''
       --template=''
-      --user=[]
       --validate=false
 
 oc create route
@@ -1539,7 +1516,6 @@ oc policy can-i
       --show-labels=false
       --sort-by=''
       --template=''
-      --user=''
 
 oc policy remove-group
       --allow-missing-template-keys=true
@@ -1552,6 +1528,7 @@ oc policy remove-role-from-group
       --no-headers=false
   -o, --output=''
       --role-namespace=''
+      --rolebinding-name=''
   -a, --show-all=true
       --show-labels=false
       --sort-by=''
@@ -1563,6 +1540,7 @@ oc policy remove-role-from-user
       --no-headers=false
   -o, --output=''
       --role-namespace=''
+      --rolebinding-name=''
   -z, --serviceaccount=[]
   -a, --show-all=true
       --show-labels=false
@@ -1603,7 +1581,6 @@ oc policy scc-subject-review
       --show-labels=false
       --sort-by=''
       --template=''
-  -u, --user=''
 
 oc policy who-can
       --all-namespaces=false
@@ -1665,6 +1642,8 @@ oc import app.json
 
 oc image
 
+oc registry
+
 oc logout
 
 oc config
@@ -1688,25 +1667,14 @@ oc config set
       --set-raw-bytes=false
 
 oc config set-cluster
-      --certificate-authority=''
       --embed-certs=false
-      --insecure-skip-tls-verify=false
-      --server=''
 
 oc config set-context
-      --cluster=''
-      --namespace=''
-      --user=''
 
 oc config set-credentials
       --auth-provider=''
       --auth-provider-arg=[]
-      --client-certificate=''
-      --client-key=''
       --embed-certs=false
-      --password=''
-      --token=''
-      --username=''
 
 oc config unset
 
@@ -1747,7 +1715,7 @@ oc ex config patch
       --no-headers=false
   -o, --output=''
   -p, --patch=''
-  -a, --show-all=false
+  -a, --show-all=true
       --show-labels=false
       --sort-by=''
       --template=''
@@ -1755,36 +1723,44 @@ oc ex config patch
 
 oc ex diagnostics
       --cluster-context=''
-      --config=''
-      --context=''
   -l, --diaglevel=1
       --host=false
-      --loglevel=0
-      --logspec=''
       --master-config=''
       --node-config=''
       --prevent-modification=false
 
 oc ex diagnostics aggregatedlogging
       --cluster-context=''
-      --config=''
-      --context=''
   -l, --diaglevel=1
-      --loglevel=0
-      --logspec=''
+      --logging-project=''
       --prevent-modification=false
 
 oc ex diagnostics all
+      --aggregatedlogging-logging-project=''
+      --appcreate-admission-timeout=10
+      --appcreate-app-image='registry.access.redhat.com/openshift3/ose-deployer
+      --appcreate-app-name='diagnostic-appcreate'
+      --appcreate-app-port=8080
+      --appcreate-deploy-timeout=120
+      --appcreate-http-retries=10
+      --appcreate-http-timeout=500
+      --appcreate-keep-app=false
+      --appcreate-keep-project=false
+      --appcreate-node-selector=''
+      --appcreate-project=''
+      --appcreate-project-base='openshift-diagnostic-appcreate-'
+      --appcreate-result-dir=''
+      --appcreate-route-host=''
+      --appcreate-route-port=80
+      --appcreate-skip-route-connect=false
+      --appcreate-skip-route-test=false
+      --appcreate-skip-service-connect=false
       --cluster-context=''
-      --config=''
-      --context=''
   -l, --diaglevel=1
       --diagnosticpod-images='registry.access.redhat.com/openshift3/ose-${component}
       --diagnosticpod-latest-images=false
       --etcdwritevolume-duration='1m'
       --host=false
-      --loglevel=0
-      --logspec=''
       --master-config=''
       --networkcheck-logdir='/tmp/openshift/'
       --networkcheck-pod-image='openshift3/ose
@@ -1797,113 +1773,94 @@ oc ex diagnostics all
 oc ex diagnostics analyzelogs
   -l, --diaglevel=1
       --host=false
-      --loglevel=0
-      --logspec=''
       --master-config=''
       --node-config=''
 
+oc ex diagnostics appcreate
+      --admission-timeout=10
+      --app-image='registry.access.redhat.com/openshift3/ose-deployer
+      --app-name='diagnostic-appcreate'
+      --app-port=8080
+      --cluster-context=''
+      --deploy-timeout=120
+  -l, --diaglevel=1
+      --http-retries=10
+      --http-timeout=500
+      --keep-app=false
+      --keep-project=false
+      --node-selector=''
+      --prevent-modification=false
+      --project=''
+      --project-base='openshift-diagnostic-appcreate-'
+      --result-dir=''
+      --route-host=''
+      --route-port=80
+      --skip-route-connect=false
+      --skip-route-test=false
+      --skip-service-connect=false
+
 oc ex diagnostics clusterregistry
       --cluster-context=''
-      --config=''
-      --context=''
   -l, --diaglevel=1
-      --loglevel=0
-      --logspec=''
       --prevent-modification=false
 
 oc ex diagnostics clusterrolebindings
       --cluster-context=''
-      --config=''
-      --context=''
   -l, --diaglevel=1
-      --loglevel=0
-      --logspec=''
       --prevent-modification=false
 
 oc ex diagnostics clusterroles
       --cluster-context=''
-      --config=''
-      --context=''
   -l, --diaglevel=1
-      --loglevel=0
-      --logspec=''
       --prevent-modification=false
 
 oc ex diagnostics clusterrouter
       --cluster-context=''
-      --config=''
-      --context=''
   -l, --diaglevel=1
-      --loglevel=0
-      --logspec=''
       --prevent-modification=false
 
 oc ex diagnostics configcontexts
       --cluster-context=''
-      --config=''
-      --context=''
   -l, --diaglevel=1
-      --loglevel=0
-      --logspec=''
       --prevent-modification=false
 
 oc ex diagnostics diagnosticpod
       --cluster-context=''
-      --config=''
-      --context=''
   -l, --diaglevel=1
       --images='registry.access.redhat.com/openshift3/ose-${component}
       --latest-images=false
-      --loglevel=0
-      --logspec=''
       --prevent-modification=false
 
 oc ex diagnostics etcdwritevolume
   -l, --diaglevel=1
       --duration='1m'
       --host=false
-      --loglevel=0
-      --logspec=''
       --master-config=''
       --node-config=''
 
 oc ex diagnostics masterconfigcheck
   -l, --diaglevel=1
       --host=false
-      --loglevel=0
-      --logspec=''
       --master-config=''
       --node-config=''
 
 oc ex diagnostics masternode
       --cluster-context=''
-      --config=''
-      --context=''
   -l, --diaglevel=1
       --host=false
-      --loglevel=0
-      --logspec=''
       --master-config=''
       --node-config=''
       --prevent-modification=false
 
 oc ex diagnostics metricsapiproxy
       --cluster-context=''
-      --config=''
-      --context=''
   -l, --diaglevel=1
-      --loglevel=0
-      --logspec=''
       --prevent-modification=false
 
 oc ex diagnostics networkcheck
       --cluster-context=''
-      --config=''
-      --context=''
   -l, --diaglevel=1
       --logdir='/tmp/openshift/'
-      --loglevel=0
-      --logspec=''
       --pod-image='openshift3/ose
       --prevent-modification=false
       --test-pod-image='openshift3/ose-deployer
@@ -1913,37 +1870,23 @@ oc ex diagnostics networkcheck
 oc ex diagnostics nodeconfigcheck
   -l, --diaglevel=1
       --host=false
-      --loglevel=0
-      --logspec=''
       --master-config=''
       --node-config=''
 
 oc ex diagnostics nodedefinitions
       --cluster-context=''
-      --config=''
-      --context=''
   -l, --diaglevel=1
-      --loglevel=0
-      --logspec=''
       --prevent-modification=false
 
 oc ex diagnostics routecertificatevalidation
       --cluster-context=''
-      --config=''
-      --context=''
   -l, --diaglevel=1
-      --loglevel=0
-      --logspec=''
       --prevent-modification=false
 
 oc ex diagnostics serviceexternalips
       --cluster-context=''
-      --config=''
-      --context=''
   -l, --diaglevel=1
       --host=false
-      --loglevel=0
-      --logspec=''
       --master-config=''
       --node-config=''
       --prevent-modification=false
@@ -1951,8 +1894,6 @@ oc ex diagnostics serviceexternalips
 oc ex diagnostics unitstatus
   -l, --diaglevel=1
       --host=false
-      --loglevel=0
-      --logspec=''
       --master-config=''
       --node-config=''
 
@@ -1983,6 +1924,7 @@ oc ex ipfailover
       --sort-by=''
       --template=''
       --type='keepalived'
+      --virtual-ip-groups=0
       --virtual-ips=''
       --vrrp-id-offset=0
   -w, --watch-port=80
@@ -1999,7 +1941,7 @@ oc ex sync-groups
       --confirm=false
       --no-headers=false
   -o, --output='yaml'
-  -a, --show-all=false
+  -a, --show-all=true
       --show-labels=false
       --sort-by=''
       --sync-config=''
@@ -2018,6 +1960,7 @@ oc version
 oc options
       --as=''
       --as-group=[]
+      --azure-container-registry-config=''
       --cache-dir='/home/xxia/.kube/http-cache'
       --certificate-authority=''
       --client-certificate=''
@@ -2025,14 +1968,18 @@ oc options
       --cluster=''
       --config=''
       --context=''
+      --google-json-key=''
       --insecure-skip-tls-verify=false
       --log-flush-frequency=5s
       --loglevel=0
       --logspec=''
       --match-server-version=false
   -n, --namespace=''
+      --password=''
       --request-timeout='0'
-      --server=''
+  -s, --server=''
       --token=''
       --user=''
+      --username=''
+      --v=0
       --version=false
