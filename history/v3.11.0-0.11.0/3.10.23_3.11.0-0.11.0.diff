@@ -1,0 +1,33 @@
+ oc adm router
++      --extended-logging=false
++      --mutual-tls-auth='none'
++      --mutual-tls-auth-ca=''
++      --mutual-tls-auth-crl=''
++      --mutual-tls-auth-filter=''
++      --threads=0
+ oc adm manage-node
+-      --evacuate=false
++oc adm diagnostics securitycontextconstraints
+----------
+ oc new-app
+-      --image=[]
+ oc new-build
++      --build-config-map=[]
+-      --image=[]
+ oc get
+-      --experimental-server-print=false
+-  -a, --show-all=true
++      --server-print=true
+ oc delete
++      --wait=true
+ oc logs
++      --all-containers=false
+-      --interactive=false
+ oc debug
++      --dry-run=false
+ oc create clusterrole
++      --aggregation-rule=
+ oc auth reconcile
++      --dry-run=false
++      --remove-extra-permissions=false
++      --remove-extra-subjects=false

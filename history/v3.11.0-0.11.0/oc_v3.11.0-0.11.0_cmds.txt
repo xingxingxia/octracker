@@ -1,0 +1,1762 @@
+
+Usage
+oc
+
+Basic Commands
+types
+login
+new-project
+new-app
+status
+project
+projects
+explain
+cluster
+
+Build and Deploy Commands
+rollout
+rollback
+new-build
+start-build
+cancel-build
+import-image
+tag
+
+Application Management Commands
+get
+describe
+edit
+set
+label
+annotate
+expose
+delete
+scale
+autoscale
+secrets
+serviceaccounts
+
+Troubleshooting and Debugging Commands
+logs
+rsh
+rsync
+port-forward
+debug
+exec
+proxy
+attach
+run
+cp
+wait
+
+  wait            Experimental
+Wait
+
+Advanced Commands
+adm
+create
+replace
+apply
+patch
+process
+export
+extract
+idle
+observe
+policy
+auth
+convert
+import
+image
+registry
+api-versions
+api-resources
+
+Settings Commands
+logout
+config
+whoami
+completion
+
+Other Commands
+ex
+help
+plugin
+version
+================================
+
+oc oc
+
+oc types
+
+oc login
+  -p, --password=''
+  -u, --username=''
+      --insecure-skip-tls-verify=false
+      --token=''
+
+oc new-project
+      --description=''
+      --display-name=''
+      --skip-config-write=false
+
+oc new-app
+      --allow-missing-images=false
+      --allow-missing-imagestream-tags=false
+      --allow-missing-template-keys=false
+      --as-test=false
+      --build-env=[]
+      --build-env-file=[]
+      --code=[]
+      --context-dir=''
+      --docker-image=[]
+      --dry-run=false
+  -e, --env=[]
+      --env-file=[]
+  -f, --file=[]
+      --grant-install-rights=false
+      --group=[]
+      --ignore-unknown-parameters=false
+  -i, --image-stream=[]
+      --insecure-registry=false
+  -l, --labels=''
+  -L, --list=false
+      --name=''
+      --no-install=false
+  -o, --output=''
+      --output-version=''
+  -p, --param=[]
+      --param-file=[]
+  -S, --search=false
+  -a, --show-all=true
+      --show-labels=false
+      --sort-by=''
+      --source-secret=''
+      --strategy=
+      --template=[]
+
+oc status
+      --all-namespaces=false
+  -o, --output=''
+      --suggest=false
+
+oc project
+  -q, --short=false
+
+oc projects
+  -q, --short=false
+
+oc explain
+      --api-version=''
+      --recursive=false
+
+oc cluster
+
+oc cluster add
+      --base-dir=''
+      --image='registry.access.redhat.com/openshift3/ose-${component}
+      --server-loglevel=0
+
+oc cluster down
+
+oc cluster status
+
+oc cluster up
+      --base-dir=''
+      --enable=[*]
+      --forward-ports=false
+      --http-proxy=''
+      --https-proxy=''
+      --image='registry.access.redhat.com/openshift3/ose-${component}
+      --no-proxy=[]
+      --public-hostname=''
+      --routing-suffix=''
+      --server-loglevel=0
+      --skip-registry-check=false
+      --write-config=false
+
+oc rollout
+
+oc rollout cancel
+      --allow-missing-template-keys=true
+  -f, --filename=[]
+  -o, --output=''
+  -R, --recursive=false
+      --template=''
+
+oc rollout history
+  -f, --filename=[]
+  -R, --recursive=false
+      --revision=0
+
+oc rollout latest
+      --again=false
+      --allow-missing-template-keys=true
+      --dry-run=false
+  -o, --output=''
+      --template=''
+
+oc rollout pause
+  -f, --filename=[]
+  -R, --recursive=false
+
+oc rollout resume
+  -f, --filename=[]
+  -R, --recursive=false
+
+oc rollout retry
+      --allow-missing-template-keys=true
+  -f, --filename=[]
+  -o, --output=''
+  -R, --recursive=false
+      --template=''
+
+oc rollout status
+  -f, --filename=[]
+  -R, --recursive=false
+      --revision=0
+  -w, --watch=true
+
+oc rollout undo
+      --dry-run=false
+  -f, --filename=[]
+  -R, --recursive=false
+      --to-revision=0
+
+oc rollback
+      --allow-missing-template-keys=true
+      --change-scaling-settings=false
+      --change-strategy=false
+      --change-triggers=false
+  -d, --dry-run=false
+  -o, --output=''
+      --template=''
+      --to-version=0
+
+oc new-build
+      --allow-missing-images=false
+      --allow-missing-imagestream-tags=false
+      --allow-missing-template-keys=true
+      --binary=false
+      --build-arg=[]
+      --build-config-map=[]
+      --build-secret=[]
+      --code=[]
+      --context-dir=''
+      --docker-image=[]
+  -D, --dockerfile=''
+      --dry-run=false
+  -e, --env=[]
+      --env-file=[]
+  -i, --image-stream=[]
+  -l, --labels=''
+      --name=''
+      --no-output=false
+  -o, --output=''
+      --output-version=''
+      --push-secret=''
+  -a, --show-all=true
+      --show-labels=false
+      --sort-by=''
+      --source-image=''
+      --source-image-path=''
+      --source-secret=''
+      --strategy=
+      --template=''
+      --to=''
+      --to-docker=false
+
+oc start-build
+      --allow-missing-template-keys=true
+      --build-arg=[]
+      --build-loglevel=''
+      --commit=''
+  -e, --env=[]
+  -F, --follow=false
+      --from-archive=''
+      --from-build=''
+      --from-dir=''
+      --from-file=''
+      --from-repo=''
+      --from-webhook=''
+      --git-post-receive=''
+      --git-repository=''
+      --incremental=false
+      --list-webhooks=''
+      --no-cache=false
+  -o, --output=''
+      --template=''
+  -w, --wait=false
+
+oc cancel-build
+      --dump-logs=false
+      --restart=false
+      --state=[new,pending,running]
+
+oc import-image
+      --all=false
+      --confirm=false
+      --dry-run=false
+      --from=''
+      --insecure=false
+      --reference-policy='source'
+      --scheduled=false
+
+oc tag
+      --alias=false
+  -d, --delete=false
+      --insecure=false
+      --reference=false
+      --reference-policy='source'
+      --scheduled=false
+      --source=''
+
+oc get
+      --all-namespaces=false
+      --allow-missing-template-keys=true
+      --chunk-size=500
+      --export=false
+      --field-selector=''
+  -f, --filename=[]
+      --ignore-not-found=false
+      --include-uninitialized=false
+  -L, --label-columns=[]
+      --no-headers=false
+  -o, --output=''
+      --raw=''
+  -R, --recursive=false
+  -l, --selector=''
+      --server-print=true
+      --show-kind=false
+      --show-labels=false
+      --sort-by=''
+      --template=''
+      --use-openapi-print-columns=false
+  -w, --watch=false
+      --watch-only=false
+
+oc describe
+      --all-namespaces=false
+  -f, --filename=[]
+      --include-uninitialized=false
+  -R, --recursive=false
+  -l, --selector=''
+      --show-events=true
+
+oc edit
+      --allow-missing-template-keys=true
+  -f, --filename=[]
+      --include-uninitialized=false
+  -o, --output=''
+      --output-patch=false
+      --record=false
+  -R, --recursive=false
+      --save-config=false
+      --template=''
+      --validate=false
+      --windows-line-endings=false
+
+oc set
+
+oc set env
+      --all=false
+      --allow-missing-template-keys=true
+  -c, --containers='*'
+      --dry-run=false
+  -e, --env=[]
+  -f, --filename=[]
+      --from=''
+      --list=false
+      --local=false
+  -o, --output=''
+      --overwrite=true
+      --prefix=''
+  -R, --recursive=false
+      --resolve=false
+      --resource-version=''
+  -l, --selector=''
+      --template=''
+
+oc set resources
+      --all=false
+      --allow-missing-template-keys=true
+  -c, --containers='*'
+      --dry-run=false
+  -f, --filename=[]
+      --include-uninitialized=false
+      --limits=''
+      --local=false
+  -o, --output=''
+      --record=false
+  -R, --recursive=false
+      --requests=''
+  -l, --selector=''
+      --template=''
+
+oc set volumes
+      --add=false
+      --all=false
+      --allow-missing-template-keys=true
+      --claim-class=''
+      --claim-mode='ReadWriteOnce'
+      --claim-name=''
+      --claim-size=''
+      --configmap-name=''
+      --confirm=false
+  -c, --containers='*'
+      --default-mode=''
+      --dry-run=false
+  -f, --filename=[]
+      --local=false
+  -m, --mount-path=''
+      --name=''
+  -o, --output=''
+      --overwrite=false
+      --path=''
+      --read-only=false
+  -R, --recursive=false
+      --remove=false
+      --secret-name=''
+  -l, --selector=''
+      --source=''
+      --sub-path=''
+      --template=''
+  -t, --type=''
+
+oc set probe
+      --all=false
+      --allow-missing-template-keys=true
+  -c, --containers='*'
+      --dry-run=false
+      --failure-threshold=0
+  -f, --filename=[]
+      --get-url=''
+      --initial-delay-seconds=0
+      --liveness=false
+      --local=false
+      --open-tcp=''
+  -o, --output=''
+      --period-seconds=0
+      --readiness=false
+  -R, --recursive=false
+      --remove=false
+  -l, --selector=''
+      --success-threshold=0
+      --template=''
+      --timeout-seconds=0
+
+oc set deployment-hook
+      --all=false
+      --allow-missing-template-keys=true
+  -c, --container=''
+      --dry-run=false
+  -e, --environment=[]
+      --failure-policy='ignore'
+  -f, --filename=[]
+      --local=false
+      --mid=false
+  -o, --output=''
+      --post=false
+      --pre=false
+  -R, --recursive=false
+      --remove=false
+  -l, --selector=''
+      --template=''
+      --volumes=[]
+
+oc set image
+      --all=false
+      --allow-missing-template-keys=true
+      --dry-run=false
+  -f, --filename=[]
+      --include-uninitialized=false
+      --local=false
+  -o, --output=''
+      --record=false
+  -R, --recursive=false
+  -l, --selector=''
+      --source='docker'
+      --template=''
+
+oc set image-lookup
+      --all=false
+      --allow-missing-template-keys=true
+      --dry-run=false
+      --enabled=true
+  -f, --filename=[]
+      --list=false
+      --local=false
+  -o, --output=''
+  -R, --recursive=false
+  -l, --selector=''
+      --template=''
+
+oc set triggers
+      --all=false
+      --allow-missing-template-keys=true
+      --auto=false
+  -c, --containers=''
+      --dry-run=false
+  -f, --filename=[]
+      --from-bitbucket=false
+      --from-config=false
+      --from-github=false
+      --from-gitlab=false
+      --from-image=''
+      --from-webhook=false
+      --from-webhook-allow-env=false
+      --local=false
+      --manual=false
+  -o, --output=''
+  -R, --recursive=false
+      --remove=false
+      --remove-all=false
+  -l, --selector=''
+      --template=''
+
+oc set build-hook
+      --all=false
+      --allow-missing-template-keys=true
+      --command=false
+      --dry-run=false
+  -f, --filename=[]
+      --local=false
+  -o, --output=''
+      --post-commit=false
+  -R, --recursive=false
+      --remove=false
+      --script=''
+  -l, --selector=''
+      --template=''
+
+oc label
+      --all=false
+      --allow-missing-template-keys=true
+      --dry-run=false
+      --field-selector=''
+  -f, --filename=[]
+      --include-uninitialized=false
+      --list=false
+      --local=false
+  -o, --output=''
+      --overwrite=false
+      --record=false
+  -R, --recursive=false
+      --resource-version=''
+  -l, --selector=''
+      --template=''
+
+oc annotate
+      --all=false
+      --allow-missing-template-keys=true
+      --dry-run=false
+      --field-selector=''
+  -f, --filename=[]
+      --include-uninitialized=false
+      --local=false
+  -o, --output=''
+      --overwrite=false
+      --record=false
+  -R, --recursive=false
+      --resource-version=''
+  -l, --selector=''
+      --template=''
+
+oc expose
+      --allow-missing-template-keys=true
+      --cluster-ip=''
+      --dry-run=false
+      --external-ip=''
+  -f, --filename=[]
+      --generator=''
+      --hostname=''
+  -l, --labels=''
+      --load-balancer-ip=''
+      --name=''
+  -o, --output=''
+      --overrides=''
+      --path=''
+      --port=''
+      --protocol=''
+      --record=false
+  -R, --recursive=false
+      --save-config=false
+      --selector=''
+      --session-affinity=''
+      --target-port=''
+      --template=''
+      --type=''
+      --wildcard-policy=''
+
+oc delete
+      --all=false
+      --cascade=true
+      --field-selector=''
+  -f, --filename=[]
+      --force=false
+      --grace-period=-1
+      --ignore-not-found=false
+      --include-uninitialized=false
+      --now=false
+  -o, --output=''
+  -R, --recursive=false
+  -l, --selector=''
+      --timeout=0s
+      --wait=true
+
+oc scale
+      --all=false
+      --allow-missing-template-keys=true
+      --current-replicas=-1
+  -f, --filename=[]
+  -o, --output=''
+      --record=false
+  -R, --recursive=false
+      --replicas=0
+      --resource-version=''
+  -l, --selector=''
+      --template=''
+      --timeout=0s
+
+oc autoscale
+      --allow-missing-template-keys=true
+      --cpu-percent=-1
+      --dry-run=false
+  -f, --filename=[]
+      --generator='horizontalpodautoscaler/v1'
+      --max=-1
+      --min=-1
+      --name=''
+  -o, --output=''
+      --record=false
+  -R, --recursive=false
+      --save-config=false
+      --template=''
+
+oc secrets
+
+oc secrets add
+      --for=[mount]
+
+oc secrets link
+      --for=[mount]
+
+oc secrets unlink
+
+oc serviceaccounts
+
+oc serviceaccounts create-kubeconfig
+      --with-namespace=''
+
+oc serviceaccounts get-token
+
+oc serviceaccounts new-token
+  -l, --labels=''
+      --timeout=30s
+
+oc logs
+      --all-containers=false
+  -c, --container=''
+  -f, --follow=false
+      --limit-bytes=0
+      --pod-running-timeout=20s
+  -p, --previous=false
+  -l, --selector=''
+      --since=0s
+      --since-time=''
+      --tail=-1
+      --timestamps=false
+      --version=0
+
+oc rsh
+  -c, --container=''
+  -T, --no-tty=false
+      --shell='/bin/sh'
+      --timeout=10
+  -t, --tty=false
+
+oc rsync
+      --compress=false
+  -c, --container=''
+      --delete=false
+      --exclude=[]
+      --include=[]
+      --no-perms=false
+      --progress=false
+  -q, --quiet=false
+      --strategy=''
+  -w, --watch=false
+
+oc port-forward
+      --pod-running-timeout=1m0s
+
+oc debug
+      --allow-missing-template-keys=true
+      --as-root=false
+      --as-user=-1
+  -c, --container=''
+      --dry-run=false
+  -f, --filename=[]
+      --keep-annotations=false
+      --keep-init-containers=true
+      --keep-liveness=false
+      --keep-readiness=false
+  -I, --no-stdin=false
+  -T, --no-tty=false
+      --node-name=''
+      --one-container=false
+  -o, --output=''
+  -R, --recursive=false
+      --show-labels=false
+      --template=''
+  -t, --tty=false
+
+oc exec
+  -c, --container=''
+  -p, --pod=''
+  -i, --stdin=false
+  -t, --tty=false
+
+oc proxy
+      --accept-hosts='^localhost$,^127\.0\.0\.1$,^\[
+      --accept-paths='^.*'
+      --address='127.0.0.1'
+      --api-prefix='/'
+      --disable-filter=false
+  -p, --port=8001
+      --reject-methods='^$'
+      --reject-paths='^/api/.*/pods/.*/exec,^/api/.*/pods/.*/attach'
+  -u, --unix-socket=''
+  -w, --www=''
+  -P, --www-prefix='/static/'
+
+oc attach
+  -c, --container=''
+      --pod-running-timeout=1m0s
+  -i, --stdin=false
+  -t, --tty=false
+
+oc run
+      --allow-missing-template-keys=true
+      --attach=false
+      --cascade=true
+      --command=false
+      --dry-run=false
+      --env=[]
+      --expose=false
+  -f, --filename=[]
+      --force=false
+      --generator=''
+      --grace-period=-1
+      --hostport=-1
+      --image=''
+      --image-pull-policy=''
+  -l, --labels=''
+      --leave-stdin-open=false
+      --limits=''
+  -o, --output=''
+      --overrides=''
+      --pod-running-timeout=1m0s
+      --port=''
+      --quiet=false
+      --record=false
+  -R, --recursive=false
+  -r, --replicas=1
+      --requests=''
+      --restart='Always'
+      --rm=false
+      --save-config=false
+      --schedule=''
+      --service-generator='service/v2'
+      --service-overrides=''
+      --serviceaccount=''
+  -i, --stdin=false
+      --template=''
+      --timeout=0s
+  -t, --tty=false
+      --wait=false
+
+oc cp
+  -c, --container=''
+
+oc wait
+      --all-namespaces=false
+      --allow-missing-template-keys=true
+  -f, --filename=[]
+      --for=''
+  -o, --output=''
+  -R, --recursive=true
+  -l, --selector=''
+      --template=''
+      --timeout=30s
+
+oc Wait
+
+oc adm
+
+oc create
+      --allow-missing-template-keys=true
+      --dry-run=false
+      --edit=false
+  -f, --filename=[]
+  -o, --output=''
+      --raw=''
+      --record=false
+  -R, --recursive=false
+      --save-config=false
+  -l, --selector=''
+      --template=''
+      --validate=false
+      --windows-line-endings=false
+
+oc create clusterresourcequota
+      --allow-missing-template-keys=true
+      --dry-run=false
+      --hard=[]
+  -o, --output=''
+      --project-annotation-selector=''
+      --project-label-selector=''
+      --template=''
+
+oc create clusterrole
+      --aggregation-rule=
+      --allow-missing-template-keys=true
+      --dry-run=false
+      --non-resource-url=[]
+  -o, --output=''
+      --resource=[]
+      --resource-name=[]
+      --save-config=false
+      --template=''
+      --validate=false
+      --verb=[]
+
+oc create clusterrolebinding
+      --allow-missing-template-keys=true
+      --clusterrole=''
+      --dry-run=false
+      --generator='clusterrolebinding.rbac.authorization.k8s.io/v1alpha1'
+      --group=[]
+  -o, --output=''
+      --save-config=false
+      --serviceaccount=[]
+      --template=''
+      --validate=false
+
+oc create configmap
+      --allow-missing-template-keys=true
+      --append-hash=false
+      --dry-run=false
+      --from-env-file=''
+      --from-file=[]
+      --from-literal=[]
+      --generator='configmap/v1'
+  -o, --output=''
+      --save-config=false
+      --template=''
+      --validate=false
+
+oc create deployment
+      --allow-missing-template-keys=true
+      --dry-run=false
+      --generator=''
+      --image=[]
+  -o, --output=''
+      --save-config=false
+      --template=''
+      --validate=false
+
+oc create deploymentconfig
+      --allow-missing-template-keys=true
+      --dry-run=false
+      --image=''
+  -o, --output=''
+      --template=''
+
+oc create identity
+      --allow-missing-template-keys=true
+      --dry-run=false
+  -o, --output=''
+      --template=''
+
+oc create imagestream
+      --allow-missing-template-keys=true
+      --dry-run=false
+      --lookup-local=false
+  -o, --output=''
+      --template=''
+
+oc create imagestreamtag
+      --allow-missing-template-keys=true
+  -A, --annotation=[]
+      --dry-run=false
+      --from=''
+      --from-image=''
+      --insecure=false
+  -o, --output=''
+      --reference=false
+      --reference-policy=''
+      --scheduled=false
+      --template=''
+
+oc create job
+      --allow-missing-template-keys=true
+      --dry-run=false
+      --from=''
+  -o, --output=''
+      --save-config=false
+      --template=''
+      --validate=false
+
+oc create namespace
+      --allow-missing-template-keys=true
+      --dry-run=false
+      --generator='namespace/v1'
+  -o, --output=''
+      --save-config=false
+      --template=''
+      --validate=false
+
+oc create poddisruptionbudget
+      --allow-missing-template-keys=true
+      --dry-run=false
+      --generator='poddisruptionbudget/v1beta1/v2'
+      --max-unavailable=''
+      --min-available=''
+  -o, --output=''
+      --save-config=false
+      --selector=''
+      --template=''
+      --validate=false
+
+oc create priorityclass
+      --allow-missing-template-keys=true
+      --description=''
+      --dry-run=false
+      --generator='priorityclass/v1alpha1'
+      --global-default=false
+  -o, --output=''
+      --save-config=false
+      --template=''
+      --validate=false
+      --value=0
+
+oc create quota
+      --allow-missing-template-keys=true
+      --dry-run=false
+      --generator='resourcequotas/v1'
+      --hard=''
+  -o, --output=''
+      --save-config=false
+      --scopes=''
+      --template=''
+      --validate=false
+
+oc create role
+      --allow-missing-template-keys=true
+      --dry-run=false
+  -o, --output=''
+      --resource=[]
+      --resource-name=[]
+      --save-config=false
+      --template=''
+      --validate=false
+      --verb=[]
+
+oc create rolebinding
+      --allow-missing-template-keys=true
+      --clusterrole=''
+      --dry-run=false
+      --generator='rolebinding.rbac.authorization.k8s.io/v1alpha1'
+      --group=[]
+  -o, --output=''
+      --role=''
+      --save-config=false
+      --serviceaccount=[]
+      --template=''
+      --validate=false
+
+oc create route
+
+oc create route edge
+      --allow-missing-template-keys=true
+      --ca-cert=''
+      --cert=''
+      --dry-run=false
+      --hostname=''
+      --insecure-policy=''
+      --key=''
+  -o, --output=''
+      --path=''
+      --port=''
+      --service=''
+      --template=''
+      --validate=false
+      --wildcard-policy=''
+
+oc create route passthrough
+      --allow-missing-template-keys=true
+      --dry-run=false
+      --hostname=''
+      --insecure-policy=''
+  -o, --output=''
+      --port=''
+      --service=''
+      --template=''
+      --validate=false
+      --wildcard-policy=''
+
+oc create route reencrypt
+      --allow-missing-template-keys=true
+      --ca-cert=''
+      --cert=''
+      --dest-ca-cert=''
+      --dry-run=false
+      --hostname=''
+      --insecure-policy=''
+      --key=''
+  -o, --output=''
+      --path=''
+      --port=''
+      --service=''
+      --template=''
+      --validate=false
+      --wildcard-policy=''
+
+oc create secret
+
+oc create secret docker-registry
+      --allow-missing-template-keys=true
+      --append-hash=false
+      --docker-email=''
+      --docker-password=''
+      --docker-server='https
+      --docker-username=''
+      --dry-run=false
+      --from-file=[]
+      --generator='secret-for-docker-registry/v1'
+  -o, --output=''
+      --save-config=false
+      --template=''
+      --validate=false
+
+oc create secret generic
+      --allow-missing-template-keys=true
+      --append-hash=false
+      --dry-run=false
+      --from-env-file=''
+      --from-file=[]
+      --from-literal=[]
+      --generator='secret/v1'
+  -o, --output=''
+      --save-config=false
+      --template=''
+      --type=''
+      --validate=false
+
+oc create secret tls
+      --allow-missing-template-keys=true
+      --append-hash=false
+      --cert=''
+      --dry-run=false
+      --generator='secret-for-tls/v1'
+      --key=''
+  -o, --output=''
+      --save-config=false
+      --template=''
+      --validate=false
+
+oc create service
+
+oc create service clusterip
+      --allow-missing-template-keys=true
+      --clusterip=''
+      --dry-run=false
+      --generator='service-clusterip/v1'
+  -o, --output=''
+      --save-config=false
+      --tcp=[]
+      --template=''
+      --validate=false
+
+oc create service externalname
+      --allow-missing-template-keys=true
+      --dry-run=false
+      --external-name=''
+      --generator='service-externalname/v1'
+  -o, --output=''
+      --save-config=false
+      --tcp=[]
+      --template=''
+      --validate=false
+
+oc create service loadbalancer
+      --allow-missing-template-keys=true
+      --dry-run=false
+      --generator='service-loadbalancer/v1'
+  -o, --output=''
+      --save-config=false
+      --tcp=[]
+      --template=''
+      --validate=false
+
+oc create service nodeport
+      --allow-missing-template-keys=true
+      --dry-run=false
+      --generator='service-nodeport/v1'
+      --node-port=0
+  -o, --output=''
+      --save-config=false
+      --tcp=[]
+      --template=''
+      --validate=false
+
+oc create serviceaccount
+      --allow-missing-template-keys=true
+      --dry-run=false
+      --generator='serviceaccount/v1'
+  -o, --output=''
+      --save-config=false
+      --template=''
+      --validate=false
+
+oc create user
+      --allow-missing-template-keys=true
+      --dry-run=false
+      --full-name=''
+  -o, --output=''
+      --template=''
+
+oc create useridentitymapping
+      --allow-missing-template-keys=true
+      --dry-run=false
+  -o, --output=''
+      --template=''
+
+oc replace
+      --allow-missing-template-keys=true
+      --cascade=true
+  -f, --filename=[]
+      --force=false
+      --grace-period=-1
+  -o, --output=''
+  -R, --recursive=false
+      --save-config=false
+      --template=''
+      --timeout=0s
+      --validate=false
+      --wait=false
+
+oc apply
+      --all=false
+      --allow-missing-template-keys=true
+      --cascade=true
+      --dry-run=false
+  -f, --filename=[]
+      --force=false
+      --grace-period=-1
+      --include-uninitialized=false
+      --openapi-patch=true
+  -o, --output=''
+      --overwrite=true
+      --prune=false
+      --prune-whitelist=[]
+      --record=false
+  -R, --recursive=false
+  -l, --selector=''
+      --template=''
+      --timeout=0s
+      --validate=false
+      --wait=false
+
+oc apply edit-last-applied
+  -f, --filename=[]
+      --include-uninitialized=false
+  -o, --output='yaml'
+      --record=false
+  -R, --recursive=false
+      --windows-line-endings=false
+
+oc apply set-last-applied
+      --allow-missing-template-keys=true
+      --create-annotation=false
+      --dry-run=false
+  -f, --filename=[]
+  -o, --output=''
+      --template=''
+
+oc apply view-last-applied
+      --all=false
+  -f, --filename=[]
+  -o, --output='yaml'
+  -R, --recursive=false
+  -l, --selector=''
+
+oc patch
+      --allow-missing-template-keys=true
+      --dry-run=false
+  -f, --filename=[]
+      --local=false
+  -o, --output=''
+  -p, --patch=''
+      --record=false
+  -R, --recursive=false
+      --template=''
+      --type='strategic'
+
+oc process
+      --allow-missing-template-keys=true
+  -f, --filename=''
+      --ignore-unknown-parameters=false
+  -l, --labels=''
+      --local=false
+  -o, --output='json'
+  -p, --param=[]
+      --param-file=[]
+      --parameters=false
+      --raw=false
+  -t, --template=''
+
+oc export
+      --all-namespaces=false
+      --allow-missing-template-keys=true
+      --as-template=''
+      --exact=false
+  -f, --filename=[]
+  -o, --output='yaml'
+      --raw=false
+  -R, --recursive=false
+  -l, --selector=''
+      --template=''
+
+oc extract
+      --allow-missing-template-keys=true
+      --confirm=false
+  -f, --filename=[]
+      --keys=[]
+      --no-headers=false
+  -o, --output=''
+      --show-labels=false
+      --sort-by=''
+      --template=''
+      --to='.'
+
+oc idle
+      --all=false
+      --all-namespaces=false
+      --dry-run=false
+      --resource-names-file=''
+  -l, --selector=''
+
+oc observe
+      --all-namespaces=false
+  -a, --argument=''
+  -d, --delete=''
+      --exit-after=0s
+      --listen-addr='
+      --maximum-errors=20
+      --names=''
+      --no-headers=false
+      --object-env-var=''
+      --once=false
+      --output='jsonpath'
+      --print-metrics-on-exit=false
+      --resync-period=0s
+      --retry-count=2
+      --retry-on-exit-code=0
+      --strict-templates=false
+      --type-env-var=''
+
+oc policy
+
+oc policy add-role-to-group
+      --allow-missing-template-keys=true
+      --dry-run=false
+      --no-headers=false
+  -o, --output=''
+      --role-namespace=''
+      --rolebinding-name=''
+      --show-labels=false
+      --sort-by=''
+      --template=''
+
+oc policy add-role-to-user
+      --allow-missing-template-keys=true
+      --dry-run=false
+      --no-headers=false
+  -o, --output=''
+      --role-namespace=''
+      --rolebinding-name=''
+  -z, --serviceaccount=[]
+      --show-labels=false
+      --sort-by=''
+      --template=''
+
+oc policy can-i
+      --all-namespaces=false
+      --allow-missing-template-keys=true
+      --groups=[]
+      --ignore-scopes=false
+      --list=false
+      --no-headers=false
+  -o, --output=''
+  -q, --quiet=false
+      --scopes=[]
+      --show-labels=false
+      --sort-by=''
+      --template=''
+
+oc policy remove-group
+      --allow-missing-template-keys=true
+      --dry-run=false
+  -o, --output=''
+
+oc policy remove-role-from-group
+      --allow-missing-template-keys=true
+      --dry-run=false
+      --no-headers=false
+  -o, --output=''
+      --role-namespace=''
+      --rolebinding-name=''
+      --show-labels=false
+      --sort-by=''
+      --template=''
+
+oc policy remove-role-from-user
+      --allow-missing-template-keys=true
+      --dry-run=false
+      --no-headers=false
+  -o, --output=''
+      --role-namespace=''
+      --rolebinding-name=''
+  -z, --serviceaccount=[]
+      --show-labels=false
+      --sort-by=''
+      --template=''
+
+oc policy remove-user
+      --allow-missing-template-keys=true
+      --dry-run=false
+      --no-headers=false
+  -o, --output=''
+      --show-labels=false
+      --sort-by=''
+      --template=''
+
+oc policy scc-review
+      --allow-missing-template-keys=true
+  -f, --filename=[]
+      --no-headers=false
+  -o, --output=''
+  -R, --recursive=false
+  -z, --serviceaccount=[]
+      --show-labels=false
+      --sort-by=''
+      --template=''
+
+oc policy scc-subject-review
+      --allow-missing-template-keys=true
+  -f, --filename=[]
+  -g, --groups=[]
+      --no-headers=false
+  -o, --output=''
+  -R, --recursive=false
+  -z, --serviceaccount=''
+      --show-labels=false
+      --sort-by=''
+      --template=''
+
+oc policy who-can
+      --all-namespaces=false
+      --allow-missing-template-keys=true
+      --no-headers=false
+  -o, --output=''
+      --show-labels=false
+      --sort-by=''
+      --template=''
+
+oc auth
+
+oc auth can-i
+      --all-namespaces=false
+  -q, --quiet=false
+      --subresource=''
+
+oc auth reconcile
+      --allow-missing-template-keys=true
+      --dry-run=false
+  -f, --filename=[]
+  -o, --output=''
+  -R, --recursive=false
+      --remove-extra-permissions=false
+      --remove-extra-subjects=false
+      --template=''
+
+oc convert
+      --allow-missing-template-keys=true
+  -f, --filename=[]
+      --local=true
+  -o, --output='yaml'
+      --output-version=''
+  -R, --recursive=false
+      --template=''
+      --validate=false
+
+oc import
+
+oc import app.json
+      --allow-missing-template-keys=true
+      --as-template=''
+      --dry-run=false
+  -f, --filename=[]
+      --generator='app-json/v1'
+      --image=''
+  -o, --output=''
+      --output-version=''
+  -a, --show-all=true
+      --show-labels=false
+      --sort-by=''
+      --template=''
+
+oc image
+
+oc registry
+
+oc api-versions
+
+oc api-resources
+      --api-group=''
+      --cached=false
+      --namespaced=true
+      --no-headers=false
+  -o, --output=''
+      --verbs=[]
+
+oc logout
+
+oc config
+
+oc config current-context
+
+oc config delete-cluster
+
+oc config delete-context
+
+oc config get-clusters
+
+oc config get-contexts
+      --no-headers=false
+  -o, --output=''
+
+oc config rename-context
+
+oc config set
+      --set-raw-bytes=false
+
+oc config set-cluster
+      --embed-certs=false
+
+oc config set-context
+
+oc config set-credentials
+      --auth-provider=''
+      --auth-provider-arg=[]
+      --embed-certs=false
+      --password=''
+      --username=''
+
+oc config unset
+
+oc config use-context
+
+oc config view
+      --allow-missing-template-keys=true
+      --flatten=false
+      --merge=true
+      --minify=false
+  -o, --output='yaml'
+      --raw=false
+      --template=''
+
+oc whoami
+  -c, --show-context=false
+      --show-server=false
+  -t, --show-token=false
+
+oc completion
+
+oc ex
+
+oc ex build-chain
+      --all=false
+  -o, --output=''
+      --reverse=false
+      --trigger-only=true
+
+oc ex config
+
+oc ex config patch
+      --allow-missing-template-keys=true
+      --no-headers=false
+  -o, --output=''
+  -p, --patch=''
+      --show-labels=false
+      --sort-by=''
+      --template=''
+      --type='strategic'
+
+oc ex diagnostics
+      --cluster-context=''
+  -l, --diaglevel=1
+      --host=false
+      --master-config=''
+      --node-config=''
+      --prevent-modification=false
+
+oc ex diagnostics aggregatedlogging
+      --cluster-context=''
+  -l, --diaglevel=1
+      --logging-project=''
+      --prevent-modification=false
+
+oc ex diagnostics all
+      --aggregatedlogging-logging-project=''
+      --appcreate-admission-timeout=10
+      --appcreate-app-image='registry.access.redhat.com/openshift3/ose-deployer
+      --appcreate-app-name='diagnostic-appcreate'
+      --appcreate-app-port=8080
+      --appcreate-deploy-timeout=120
+      --appcreate-http-retries=10
+      --appcreate-http-timeout=500
+      --appcreate-keep-app=false
+      --appcreate-keep-project=false
+      --appcreate-node-selector=''
+      --appcreate-project=''
+      --appcreate-project-base='openshift-diagnostic-appcreate-'
+      --appcreate-result-dir=''
+      --appcreate-route-host=''
+      --appcreate-route-port=80
+      --appcreate-skip-route-connect=false
+      --appcreate-skip-route-test=false
+      --appcreate-skip-service-connect=false
+      --cluster-context=''
+  -l, --diaglevel=1
+      --diagnosticpod-images='registry.access.redhat.com/openshift3/ose-${component}
+      --diagnosticpod-latest-images=false
+      --etcdwritevolume-duration='1m'
+      --host=false
+      --master-config=''
+      --networkcheck-logdir='/tmp/openshift/'
+      --networkcheck-pod-image='registry.access.redhat.com/openshift3/ose-control-plane
+      --networkcheck-test-pod-image='registry.access.redhat.com/openshift3/ose-deployer
+      --networkcheck-test-pod-port=8080
+      --networkcheck-test-pod-protocol='TCP'
+      --node-config=''
+      --prevent-modification=false
+
+oc ex diagnostics analyzelogs
+  -l, --diaglevel=1
+      --host=false
+      --master-config=''
+      --node-config=''
+
+oc ex diagnostics appcreate
+      --admission-timeout=10
+      --app-image='registry.access.redhat.com/openshift3/ose-deployer
+      --app-name='diagnostic-appcreate'
+      --app-port=8080
+      --cluster-context=''
+      --deploy-timeout=120
+  -l, --diaglevel=1
+      --http-retries=10
+      --http-timeout=500
+      --keep-app=false
+      --keep-project=false
+      --node-selector=''
+      --prevent-modification=false
+      --project=''
+      --project-base='openshift-diagnostic-appcreate-'
+      --result-dir=''
+      --route-host=''
+      --route-port=80
+      --skip-route-connect=false
+      --skip-route-test=false
+      --skip-service-connect=false
+
+oc ex diagnostics clusterregistry
+      --cluster-context=''
+  -l, --diaglevel=1
+      --prevent-modification=false
+
+oc ex diagnostics clusterrolebindings
+      --cluster-context=''
+  -l, --diaglevel=1
+      --prevent-modification=false
+
+oc ex diagnostics clusterroles
+      --cluster-context=''
+  -l, --diaglevel=1
+      --prevent-modification=false
+
+oc ex diagnostics clusterrouter
+      --cluster-context=''
+  -l, --diaglevel=1
+      --prevent-modification=false
+
+oc ex diagnostics configcontexts
+      --cluster-context=''
+  -l, --diaglevel=1
+      --prevent-modification=false
+
+oc ex diagnostics diagnosticpod
+      --cluster-context=''
+  -l, --diaglevel=1
+      --images='registry.access.redhat.com/openshift3/ose-${component}
+      --latest-images=false
+      --prevent-modification=false
+
+oc ex diagnostics etcdwritevolume
+  -l, --diaglevel=1
+      --duration='1m'
+      --host=false
+      --master-config=''
+      --node-config=''
+
+oc ex diagnostics masternode
+      --cluster-context=''
+  -l, --diaglevel=1
+      --host=false
+      --master-config=''
+      --node-config=''
+      --prevent-modification=false
+
+oc ex diagnostics metricsapiproxy
+      --cluster-context=''
+  -l, --diaglevel=1
+      --prevent-modification=false
+
+oc ex diagnostics networkcheck
+      --cluster-context=''
+  -l, --diaglevel=1
+      --logdir='/tmp/openshift/'
+      --pod-image='registry.access.redhat.com/openshift3/ose-control-plane
+      --prevent-modification=false
+      --test-pod-image='registry.access.redhat.com/openshift3/ose-deployer
+      --test-pod-port=8080
+      --test-pod-protocol='TCP'
+
+oc ex diagnostics nodedefinitions
+      --cluster-context=''
+  -l, --diaglevel=1
+      --prevent-modification=false
+
+oc ex diagnostics routecertificatevalidation
+      --cluster-context=''
+  -l, --diaglevel=1
+      --prevent-modification=false
+
+oc ex diagnostics securitycontextconstraints
+      --cluster-context=''
+  -l, --diaglevel=1
+      --prevent-modification=false
+
+oc ex diagnostics serviceexternalips
+      --cluster-context=''
+  -l, --diaglevel=1
+      --host=false
+      --master-config=''
+      --node-config=''
+      --prevent-modification=false
+
+oc ex diagnostics unitstatus
+  -l, --diaglevel=1
+      --host=false
+      --master-config=''
+      --node-config=''
+
+oc ex dockergc
+      --dry-run=false
+      --image-gc-high-threshold=80
+      --image-gc-low-threshold=60
+      --minimum-ttl-duration=1h0m0s
+
+oc ex ipfailover
+      --check-interval=2
+      --check-script=''
+      --create=false
+      --dry-run=false
+      --images='registry.access.redhat.com/openshift3/ose-${component}
+  -i, --interface=''
+      --iptables-chain='INPUT'
+      --latest-images=false
+      --notify-script=''
+  -o, --output=''
+      --output-version=''
+      --preemption-strategy='preempt_delay 300'
+  -r, --replicas=1
+  -l, --selector='ipfailover=<name>'
+      --service-account='ipfailover'
+  -a, --show-all=false
+      --show-labels=false
+      --sort-by=''
+      --template=''
+      --type='keepalived'
+      --virtual-ip-groups=0
+      --virtual-ips=''
+      --vrrp-id-offset=0
+  -w, --watch-port=80
+
+oc ex prune-groups
+      --blacklist=''
+      --confirm=false
+      --sync-config=''
+      --whitelist=''
+
+oc ex sync-groups
+      --allow-missing-template-keys=true
+      --blacklist=''
+      --confirm=false
+      --no-headers=false
+  -o, --output='yaml'
+      --show-labels=false
+      --sort-by=''
+      --sync-config=''
+      --template=''
+      --type='ldap'
+      --whitelist=''
+
+oc help
+
+oc plugin
+
+oc plugin myplugin
+
+oc version
+
+oc options
+      --alsologtostderr=false
+      --as=''
+      --as-group=[]
+      --cache-dir='/home/xxia/.kube/http-cache'
+      --certificate-authority=''
+      --client-certificate=''
+      --client-key=''
+      --cluster=''
+      --config=''
+      --context=''
+      --httptest.serve=''
+      --insecure-skip-tls-verify=false
+      --log-flush-frequency=5s
+      --log_backtrace_at=
+      --log_dir=''
+      --loglevel=0
+      --logspec=''
+      --logtostderr=true
+      --match-server-version=false
+  -n, --namespace=''
+      --request-timeout='0'
+  -s, --server=''
+      --stderrthreshold=2
+      --token=''
+      --user=''
+  -v, --v=0
