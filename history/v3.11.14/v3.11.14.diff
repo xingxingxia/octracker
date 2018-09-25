@@ -1,0 +1,6 @@
+ oc options
++      --kubeconfig=''
+ oc adm create-kubeconfig
+-      --kubeconfig='.kubeconfig'
+ oc adm options
++      --kubeconfig=''
