@@ -155,7 +155,7 @@ if __name__ == '__main__':
 		test.diff = True
 		sys.argv.remove("diff")
 
-	versionOutput = subprocess.Popen(['oc', 'version'], stdout=subprocess.PIPE).stdout.read()
+	versionOutput = subprocess.Popen([sys.argv[1], 'version'], stdout=subprocess.PIPE).stdout.read()
 	test.v = re.findall(r"oc (v.+)", versionOutput)[0]
 	headerList = test.call_command_title("") 
 
